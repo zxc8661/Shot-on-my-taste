@@ -38,4 +38,4 @@ out/
 
 
 ###aplication-secret###
-*.application-secret.yml
+application-secret.yml

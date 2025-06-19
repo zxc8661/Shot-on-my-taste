@@ -120,7 +120,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, redisRepository);
-        loginFilter.setFilterProcessesUrl("/api/auth/login");
+        loginFilter.setFilterProcessesUrl("/api/member/login");
 
 
 
@@ -136,17 +136,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
 
                         .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
-                        .requestMatchers("/api/login",
-                                "/api/reissue",
-                                "/login",
-                                "/",
-                                "/api/auth/register",
-                                "/h2-console/**",
-                                "/ws/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/actuator/health",
-                                "null").permitAll()  //인증없이 접속가능
+                        .requestMatchers("/api/member/register").permitAll()  //인증없이 접속가능
                         .anyRequest().authenticated() // 인증 필요
                 )
                 .headers(headers -> headers

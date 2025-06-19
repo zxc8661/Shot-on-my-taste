@@ -25,17 +25,7 @@ public class MemberService {
     }
 
 
-    public void login(String userName, String password){
-        Member user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
-        if(PasswordConfig.matches(password,user.getPassword())){
-            throw new CustomException(ErrorCode.USERNAME_NOT_MATCH_PASSWORD);
-        }
-        Cookie cookie ;
-
-
-    }
 
 
 }
