@@ -1,0 +1,52 @@
+package somt.somt.user.entity;
+
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Table(name= "users")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Users {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nick_name", nullable = false, length = 50)
+    private String nickName;
+
+    @Column(name = "user_name", nullable = false, length = 50)
+    private String userName;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "role", nullable = false)
+    private int role;
+
+    @Column(name = "is_active",nullable = false)
+    private int isActive;
+
+    @Column(name = "create_at",nullable = false)
+    private LocalDateTime createAt;
+
+    static public Users create (String nickName,
+                              String userName,
+                              String password){
+        Users user = new Users();
+        user.nickName = nickName;
+        user.userName = userName;
+        user.password = password;
+        user.role = 0;
+        user.isActive =1;
+        user.createAt= LocalDateTime.now();
+        return user;
+    }
+
+}

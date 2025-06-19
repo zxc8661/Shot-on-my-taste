@@ -1,0 +1,23 @@
+spring :
+  application :
+    name : smot
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/somt
+    username: user
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto : update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: true
+
+  redis:
+    host: localhost
+    port: 6379
+

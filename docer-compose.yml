@@ -1,0 +1,20 @@
+version: '1'
+
+services:
+  mysql:
+    image: mysql
+    container_name: somt_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: somt
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis
+    container_name: somt_redis
+    ports:
+      - "6379:6379"
