@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * 시큐리티 설정
  *
- * @since 2025-03-25
+ * @since 2025-06-19
  * @author  이광석
  */
 @Configuration
@@ -61,7 +61,7 @@ public class SecurityConfig {
      * @return AuthenticationManager
      * @throws Exception
      * @author 이광석
-     * @since 2025-03-25
+     * @since 2025-06-19
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -74,7 +74,7 @@ public class SecurityConfig {
      * 해당 인코더는 password를 인코딩하는데 사용
      * @return BCryptPasswordEncoder
      * @author 이광석
-     * @since 2025-03-25
+     * @since 2025-06-09
      */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -115,7 +115,7 @@ public class SecurityConfig {
      * @return SecurityFilterChain
      * @throws Exception
      * @author 이광석
-     * @since 2025-03-25
+     * @since 2025-06-19
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
