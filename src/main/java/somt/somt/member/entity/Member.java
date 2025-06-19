@@ -1,4 +1,4 @@
-package somt.somt.user.entity;
+package somt.somt.member.entity;
 
 
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name= "users")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Users {
     private String password;
 
     @Column(name = "role", nullable = false)
-    private int role;
+    private String role;
 
     @Column(name = "is_active",nullable = false)
     private int isActive;
@@ -36,14 +36,14 @@ public class Users {
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
 
-    static public Users create (String nickName,
-                              String userName,
-                              String password){
-        Users user = new Users();
+    static public Member create (String nickName,
+                                 String userName,
+                                 String password){
+        Member user = new Member();
         user.nickName = nickName;
         user.userName = userName;
         user.password = password;
-        user.role = 0;
+        user.role = "CUSTOMER";
         user.isActive =1;
         user.createAt= LocalDateTime.now();
         return user;

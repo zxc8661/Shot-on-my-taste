@@ -1,23 +1,21 @@
-package somt.somt.user.controller;
+package somt.somt.member.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import somt.somt.user.dto.LoginRequestDTO;
-import somt.somt.user.dto.RegisterRequestDTO;
-import somt.somt.user.service.UserService;
+import somt.somt.member.dto.LoginRequestDTO;
+import somt.somt.member.dto.RegisterRequestDTO;
+import somt.somt.member.service.MemberService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService userService;
 
     @PostMapping("/regist")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO){

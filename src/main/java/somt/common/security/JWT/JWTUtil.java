@@ -1,11 +1,12 @@
 package somt.common.security.JWT;
 
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -29,11 +30,12 @@ public class JWTUtil {
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
 
 
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getUsername(String token){
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username",String.class);
+
     }
 
     public String getNickname(String token){

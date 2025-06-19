@@ -16,8 +16,8 @@ public class RedisRepository {
         redisTemplate.opsForValue().set(key,vale,limit, TimeUnit.MICROSECONDS);
     }
 
-    public Object getValue(String key){
-        return redisTemplate.opsForValue().get(key);
+    public String getValue(String key){
+        return redisTemplate.opsForValue().get(key).toString();
     }
 
     public void delete(String key){

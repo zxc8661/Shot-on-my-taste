@@ -1,4 +1,4 @@
-package somt.somt.user.dto;
+package somt.somt.member.dto;
 
 
 import jakarta.validation.constraints.NotBlank;

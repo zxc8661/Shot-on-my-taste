@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import somt.common.exception.CustomException;
+import somt.common.exception.ErrorCode;
 import somt.common.redis.RedisRepository;
 import somt.common.security.dto.CustomUserData;
 import somt.common.security.dto.CustomUserDetails;
@@ -79,7 +81,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String refreshToken = getRefreshToken(request.getCookies());
 
         if (refreshToken == null) {
-            throw new SecurityException(SecurityExceptionCode.TOKEN_NOT_EFFECTIVE);
+            throw new CustomException(ErrorCode.TOKEN_NOT_EFFECTIVE);
         }
 
         //토큰 존재 확인
@@ -92,20 +94,20 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-            throw new SecurityException(SecurityExceptionCode.ACCESSTOKEN_IS_EXPIRED);
+            throw new CustomException(ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 
         // 토큰 종류 확인
         if (!jwtUtil.getCategory(accessToken).equals("access")) {
-            throw new SecurityException(SecurityExceptionCode.NOT_ACCESSTOKEN);
+            throw new CustomException(ErrorCode.NOT_ACCESSTOKEN);
         }
 
-        String redisAccessToken = redisRepository.get(refreshToken);
+        String redisAccessToken = redisRepository.getValue(refreshToken);
 
         //Db와 비교
         if (!accessToken.equals(redisAccessToken)) {
             redisRepository.delete(refreshToken);
-            throw new SecurityException(SecurityExceptionCode.TOKEN_MISMATCH);
+            throw new CustomException(ErrorCode.TOKEN_MISMATCH);
         }
 
 
@@ -116,7 +118,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         if (username == null || memberId == null || role == null) {
-            throw new SecurityException(SecurityExceptionCode.TOKEN_NOT_EFFECTIVE);
+            throw new CustomException(ErrorCode.TOKEN_NOT_EFFECTIVE);
         }
 
 
@@ -144,7 +146,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private String getRefreshToken(Cookie[] cookies) {
 
 
-        if(cookies==null) throw new SecurityException(SecurityExceptionCode.NOT_FOUND_REFRESHTOKEN);
+        if(cookies==null) throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
 
         for(Cookie cookie: cookies){
             if(cookie.getName().equals("refresh")){
@@ -153,7 +155,7 @@ public class JWTFilter extends OncePerRequestFilter {
             }
         }
 
-        throw new SecurityException(SecurityExceptionCode.NOT_FOUND_REFRESHTOKEN);
+        throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
     }
 
 

@@ -1,15 +1,15 @@
 package somt.common.security.service;
 
-import com.ll.nbe344team7.domain.member.entity.Member;
-import com.ll.nbe344team7.domain.member.repository.MemberRepository;
-import com.ll.nbe344team7.global.exception.GlobalException;
-import com.ll.nbe344team7.global.exception.GlobalExceptionCode;
-import com.ll.nbe344team7.global.security.dto.CustomUserData;
-import com.ll.nbe344team7.global.security.dto.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import somt.common.exception.CustomException;
+import somt.common.exception.ErrorCode;
+import somt.common.security.dto.CustomUserData;
+import somt.common.security.dto.CustomUserDetails;
+import somt.somt.member.entity.Member;
+import somt.somt.member.repository.MemberRepository;
 
 
 /**
@@ -42,12 +42,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username);
 
         if(member==null){
-            throw new GlobalException(GlobalExceptionCode.NOT_FOUND_MEMBER);
+            throw new CustomException(ErrorCode.NOT_FOUND_MEMBER);
 
         }
 
 
-        CustomUserData customUserData = new CustomUserData(member.getId(), member.getUsername(), member.getRole(), member.getPassword(), member.getNickname());
+        CustomUserData customUserData = new CustomUserData(member.getId(), member.getUserName(), member.getRole(), member.getPassword(), member.getNickName());
 
 
         return new CustomUserDetails(customUserData);

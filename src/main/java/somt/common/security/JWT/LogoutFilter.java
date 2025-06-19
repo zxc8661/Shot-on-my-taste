@@ -1,6 +1,7 @@
 package somt.common.security.JWT;
 
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -8,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.filter.OncePerRequestFilter;
+import somt.common.exception.CustomException;
+import somt.common.exception.ErrorCode;
 import somt.common.redis.RedisRepository;
 
 import java.io.IOException;
@@ -66,27 +69,27 @@ public class LogoutFilter extends OncePerRequestFilter {
         if (refresh == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("message : 리프레쉬 토큰이 없습니다.");
-            throw new SecurityException(SecurityExceptionCode.NOT_FOUND_REFRESHTOKEN);
+            throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
         }
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("message : ");
-            throw new SecurityException(SecurityExceptionCode.REFRESHTOKEN_IS_EXPIRED);
+            throw new CustomException(ErrorCode.REFRESHTOKEN_IS_EXPIRED);
         }
 
         if (!"refresh".equals(jwtUtil.getCategory(refresh))) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("message : ");
-            throw new SecurityException(SecurityExceptionCode.IS_NOT_REFRESHTOKEN);
+            throw new CustomException(ErrorCode.IS_NOT_REFRESHTOKEN);
         }
 
         // Redis에서 해당 refresh로 저장된 access 토큰 삭제
-        String accessToken = redisRepository.get(refresh);
+        String accessToken = redisRepository.getValue(refresh);
         if (accessToken == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            throw new SecurityException(SecurityExceptionCode.NOT_FOUND_REFRESHTOKEN);
+            throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
         }
 
         redisRepository.delete(refresh);
