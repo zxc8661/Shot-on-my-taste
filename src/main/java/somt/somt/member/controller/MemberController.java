@@ -17,7 +17,7 @@ public class MemberController {
 
     private final MemberService userService;
 
-    @PostMapping("/regist")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO){
 
         userService.register(registerRequestDTO.getUserName(),registerRequestDTO.getNickName(),registerRequestDTO.getPassword());

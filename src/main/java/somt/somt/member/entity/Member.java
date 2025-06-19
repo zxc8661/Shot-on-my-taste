@@ -18,17 +18,21 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nick_name", nullable = false, length = 50)
-    private String nickName;
-
     @Column(name = "user_name", nullable = false, length = 50)
     private String userName;
 
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "nick_name", nullable = false, length = 50)
+    private String nickName;
+
     @Column(name = "role", nullable = false)
     private String role;
+
+    private String email;
+
+    private
 
     @Column(name = "is_active",nullable = false)
     private int isActive;
