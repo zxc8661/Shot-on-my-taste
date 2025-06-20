@@ -2,6 +2,7 @@ package somt.somt.domain.member.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import somt.somt.common.config.PasswordConfig;
 import somt.somt.common.exception.CustomException;
@@ -27,8 +28,17 @@ public class MemberService {
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORDS);
         }
 
+        if(userRepository.existsByUserName(requestDTO.getUserName())){
+            throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
+        }
 
-       String encodePassword = PasswordConfig.encode(requestDTO.getPassword1());
+        if(userRepository.existsByNickName(requestDTO.getNickName()))
+        {
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
+        }
+
+        String encodePassword = PasswordConfig.encode(requestDTO.getPassword1());
+
 
        Member user = Member.create(requestDTO.getUserName(),
                encodePassword,
@@ -37,7 +47,12 @@ public class MemberService {
                "ADMIN");
 
 
-       userRepository.save(user);
+       try {
+           userRepository.save(user);
+
+       }catch (DataIntegrityViolationException e){
+           throw new CustomException(ErrorCode.BAD_REGISTER_REQUEST);
+       }
     }
 
 

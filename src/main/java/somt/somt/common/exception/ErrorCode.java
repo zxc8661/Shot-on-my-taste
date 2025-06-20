@@ -16,6 +16,9 @@ public enum ErrorCode {
     USERNAME_NOT_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "Username and password do not match."),
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "Member not found."),
     NOT_MATCH_PASSWORDS(HttpStatus.BAD_REQUEST, "Passwords do not match."),
+    DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST,"Username is duplicate."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST,"NickName is duplicate."),
+    BAD_REGISTER_REQUEST(HttpStatus.BAD_REQUEST,"Bad register request"),
 
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),

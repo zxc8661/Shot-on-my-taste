@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name= "users")
+@Table(name= "member")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
@@ -20,13 +20,13 @@ public class Member {
 
     private Long addressId;
 
-    @Column(name = "user_name", nullable = false, length = 50)
+    @Column(name = "user_name", nullable = false, length = 50,unique = true)
     private String userName;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nick_name", nullable = false, length = 50)
+    @Column(name = "nick_name", nullable = false, length = 50,unique = true)
     private String nickName;
 
     @Column(name = "email", nullable = false, length = 50)
