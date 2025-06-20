@@ -55,18 +55,11 @@ public class JWTFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().startsWith("/v3/api-docs") || request.getServletPath().startsWith("/swagger-ui") || request.getServletPath().startsWith("/swagger-resources")
-            || (request.getServletPath().equals("/api/posts") && request.getMethod().equals("GET"))) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         List<String> noCertifiedUrls = new ArrayList<>();
         noCertifiedUrls.add("/api/member/login");
-        noCertifiedUrls.add("/h2-console");
         noCertifiedUrls.add("/api/member/register");
-        noCertifiedUrls.add("/api/login");
-        noCertifiedUrls.add("/actuator/health");
+        noCertifiedUrls.add("/api/member/logout");
 
         for (String noCertifiedUrl : noCertifiedUrls) {
             if (request.getServletPath().contains(noCertifiedUrl)) {

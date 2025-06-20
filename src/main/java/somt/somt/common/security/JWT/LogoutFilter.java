@@ -88,7 +88,6 @@ public class LogoutFilter extends OncePerRequestFilter {
         // Redis에서 해당 refresh로 저장된 access 토큰 삭제
         String accessToken = redisRepository.getValue(refresh);
         if (accessToken == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
         }
 
