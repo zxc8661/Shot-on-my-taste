@@ -3,10 +3,12 @@ package somt.somt.common.security.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,10 +16,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import somt.somt.common.exception.CustomException;
+import somt.somt.common.exception.ErrorCode;
+import somt.somt.common.exception.ErrorResponse;
 import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.dto.CustomUserDetails;
 
 import java.io.IOException;
+import java.rmi.server.ServerCloneException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,7 +35,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUil;
 
     private final RedisRepository redisRepository;
-
+    private final ObjectMapper objectMapper;
 
 
 
@@ -92,7 +98,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        response.setStatus(401);
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException
+    {
+        CustomException ce = (CustomException) failed.getCause();
+        ErrorCode errorCode = ce.getErrorCode();
+        ErrorResponse errorResponse = new ErrorResponse(errorCode);
+
+        response.setStatus(errorCode.getHttpStatus().value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        objectMapper.writeValue(response.getWriter(),errorResponse);
+
     }
 }

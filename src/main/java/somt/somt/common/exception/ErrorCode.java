@@ -13,25 +13,24 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // === Member 관련 에러 ===
-    USERNAME_NOT_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "아이디와 비밀번호가 일치하지 않습니다."),
-    NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND,"member 을 찾을 수 없습니다."),
-    NOT_MATCH_PASSWORDS(HttpStatus.BAD_REQUEST,"두개의 비밀번호가 일치하지 않습니다."),
+    USERNAME_NOT_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "Username and password do not match."),
+    NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "Member not found."),
+    NOT_MATCH_PASSWORDS(HttpStatus.BAD_REQUEST, "Passwords do not match."),
 
     // === JWT / Token 관련 에러 ===
-    SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "직렬화에 실패했습니다."),
-    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
-    TOKEN_NOT_EFFECTIVE(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
-    ACCESSTOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 AccessToken 입니다."),
-    NOT_ACCESSTOKEN(HttpStatus.UNAUTHORIZED, "AccessToken이 아닙니다."),
-    TOKEN_MISMATCH(HttpStatus.UNAUTHORIZED, "토큰이 일치하지 않습니다."),
-    NOT_FOUND_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "RefreshToken 을 찾을 수 없습니다."),
-    REFRESHTOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED,"만료된 RefreshToken 입니다."),
-    IS_NOT_REFRESHTOKEN(HttpStatus.UNAUTHORIZED,"RefreshToken 이 아닙니다."),
+    SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
+    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "Token has expired."),
+    TOKEN_NOT_EFFECTIVE(HttpStatus.UNAUTHORIZED, "Token is not valid."),
+    ACCESSTOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Access token has expired."),
+    NOT_ACCESSTOKEN(HttpStatus.UNAUTHORIZED, "Not an access token."),
+    TOKEN_MISMATCH(HttpStatus.UNAUTHORIZED, "Token mismatch."),
+    NOT_FOUND_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "Refresh token not found."),
+    REFRESHTOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh token has expired."),
+    IS_NOT_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "Not a refresh token."),
 
     // === 공통 / 잘못된 요청 에러 ===
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request.");
 
     private final HttpStatus httpStatus;
     private final String message;
-
 }

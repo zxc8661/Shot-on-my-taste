@@ -1,6 +1,7 @@
 package somt.somt.common.security.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import somt.somt.common.redis.RedisRepository;
-import somt.somt.common.security.JWT.JWTFilter;
-import somt.somt.common.security.JWT.JWTUtil;
-import somt.somt.common.security.JWT.LoginFilter;
-import somt.somt.common.security.JWT.LogoutFilter;
+import somt.somt.common.security.JWT.*;
 
 
 /**
@@ -34,7 +32,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RedisRepository redisRepository;
-
+    private final ObjectMapper objectMapper;
+    private final JwtAuthenticationEntryPoint jwtEntryPoint;
 
 
     @Bean
@@ -54,7 +53,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, redisRepository);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, redisRepository, objectMapper);
         loginFilter.setFilterProcessesUrl("/api/member/login");
 
 
@@ -80,6 +79,12 @@ public class SecurityConfig {
                         .defaultsDisabled()
                         .frameOptions(frame -> frame.sameOrigin())
                 )
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtEntryPoint)  // 인증 실패 시 JSON 응답
+                )
+
+
 
                 .addFilterBefore(new JWTFilter(jwtUtil,redisRepository),UsernamePasswordAuthenticationFilter.class)  // jwt 유효성 검사
 
