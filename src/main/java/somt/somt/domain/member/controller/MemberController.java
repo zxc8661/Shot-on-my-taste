@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.member.dto.LoginRequestDTO;
 import somt.somt.domain.member.dto.RegisterRequestDTO;
 import somt.somt.domain.member.service.MemberService;
@@ -28,24 +30,11 @@ public class MemberController {
 
 
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO,
-                                   HttpServletResponse response){
-
-        return ResponseEntity.ok("로그인에 성공했습니다.");
-    }
-
-    @PostMapping("logout")
-    public ResponseEntity<?> logout (HttpServletRequest request,HttpServletResponse response){
 
 
-
-        return ResponseEntity.ok("로그아웃에 성공했습니다.");
-    }
-
-    @PostMapping("withdrawal")
-    public ResponseEntity<?> withdrawal(HttpServletRequest request,HttpServletResponse response){
-
+    @PostMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal(@AuthenticationPrincipal CustomUserDetails userDetails){
+        userService.withdrawal(userDetails);
         return ResponseEntity.ok("회원탈퇴에 성공했습니다.");
     }
 

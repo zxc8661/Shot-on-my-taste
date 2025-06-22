@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import somt.somt.common.config.PasswordConfig;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
+import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.member.dto.RegisterRequestDTO;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.repository.MemberRepository;
@@ -15,7 +16,7 @@ import somt.somt.domain.member.repository.MemberRepository;
 @RequiredArgsConstructor
 public class MemberService {
 
-    final private MemberRepository userRepository;
+    final private MemberRepository memberRepository;
 
     /**
      * 회원가입 메소드
@@ -28,14 +29,15 @@ public class MemberService {
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORDS);
         }
 
-        if(userRepository.existsByUserName(requestDTO.getUserName())){
+        if(memberRepository.existsByUserName(requestDTO.getUserName())){
             throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
         }
 
-        if(userRepository.existsByNickName(requestDTO.getNickName()))
+        if(memberRepository.existsByNickName(requestDTO.getNickName()))
         {
             throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
+
 
         String encodePassword = PasswordConfig.encode(requestDTO.getPassword1());
 
@@ -48,7 +50,7 @@ public class MemberService {
 
 
        try {
-           userRepository.save(user);
+           memberRepository.save(user);
 
        }catch (DataIntegrityViolationException e){
            throw new CustomException(ErrorCode.BAD_REGISTER_REQUEST);
@@ -58,5 +60,12 @@ public class MemberService {
 
 
 
+    public void withdrawal(CustomUserDetails userDetails) {
+        Member preMember = memberRepository.findById(userDetails.getMemberId())
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
+        preMember.setIsActive();
+        preMember.setModifyAt();
+        memberRepository.save(preMember);
+    }
 }

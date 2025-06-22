@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Repository
 public class RedisRepository {
-    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String,String> redisTemplate;
 
-    public void save(String key,String vale,Long limit){
-        redisTemplate.opsForValue().set(key,vale,limit, TimeUnit.MICROSECONDS);
+    public void save(String key,String value,Long limit){
+        redisTemplate.opsForValue().set(key, value, limit, TimeUnit.MILLISECONDS);
     }
 
     public String getValue(String key){
-        return redisTemplate.opsForValue().get(key).toString();
+        return redisTemplate.opsForValue().get(key);
     }
 
     public void delete(String key){

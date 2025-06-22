@@ -67,28 +67,25 @@ public class LogoutFilter extends OncePerRequestFilter {
 
         // refresh 토큰 검증
         if (refresh == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("message : 리프레쉬 토큰이 없습니다.");
             throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
         }
+
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("message : ");
+
             throw new CustomException(ErrorCode.REFRESHTOKEN_IS_EXPIRED);
         }
 
         if (!"refresh".equals(jwtUtil.getCategory(refresh))) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("message : ");
+
             throw new CustomException(ErrorCode.IS_NOT_REFRESHTOKEN);
         }
 
         // Redis에서 해당 refresh로 저장된 access 토큰 삭제
         String accessToken = redisRepository.getValue(refresh);
         if (accessToken == null) {
-            throw new CustomException(ErrorCode.NOT_FOUND_REFRESHTOKEN);
+            throw new CustomException(ErrorCode.NOT_FOUND_ACCESSTOKEN);
         }
 
         redisRepository.delete(refresh);

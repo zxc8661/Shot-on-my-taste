@@ -58,4 +58,14 @@ public class Member {
       return member;
     }
 
+
+
+    public void setModifyAt(){
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    public void setIsActive(){
+        this.isActive = false;
+    }
+
 }

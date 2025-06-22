@@ -30,6 +30,8 @@ public enum ErrorCode {
     NOT_FOUND_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "Refresh token not found."),
     REFRESHTOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh token has expired."),
     IS_NOT_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "Not a refresh token."),
+    WITHDRAWAL_MEMBER(HttpStatus.BAD_REQUEST,"This member is withdrawal"),
+    NOT_FOUND_ACCESSTOKEN(HttpStatus.NOT_FOUND,"AccessToken not found"),
 
     // === 공통 / 잘못된 요청 에러 ===
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request.");

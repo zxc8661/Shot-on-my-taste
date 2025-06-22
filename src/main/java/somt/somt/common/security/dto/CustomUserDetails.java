@@ -1,20 +1,22 @@
 package somt.somt.common.security.dto;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+
+@Getter
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     final private CustomUserData customUserData;
 
-    public CustomUserDetails(
-            CustomUserData customUserData) {
-        this.customUserData = customUserData;
-    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();

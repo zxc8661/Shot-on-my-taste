@@ -29,9 +29,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if(member==null){
             throw new CustomException(ErrorCode.NOT_FOUND_MEMBER);
-
         }
 
+        if(member.getIsActive()==null){
+            throw new CustomException(ErrorCode.WITHDRAWAL_MEMBER);
+        }
 
         CustomUserData customUserData = new CustomUserData(member.getId(), member.getUserName(), member.getRole(), member.getPassword(), member.getNickName());
 
