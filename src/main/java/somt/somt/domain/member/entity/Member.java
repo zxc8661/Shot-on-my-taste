@@ -5,8 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import somt.somt.domain.address.entity.Address;
+import somt.somt.domain.cart.entity.Cart;
+import somt.somt.domain.comment.entity.Comment;
+import somt.somt.domain.notification.entity.Notification;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,7 +24,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long addressId;
+
 
     @Column(name = "user_name", nullable = false, length = 50,unique = true)
     private String userName;
@@ -44,6 +50,24 @@ public class Member {
 
     @Column(name = "modify_at",nullable = false)
     private LocalDateTime modifyAt;
+
+
+    /**
+     * mappedBy = "member" -> 연관관계의 주인이 cart이므로 필요
+     * cascade = CascadeType.ALL -> Member 삭제시 카트도 같이 삭제 가능
+     * orphanRemoval = true 부모엔티티가 삭데
+     */
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true )
+    private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Address> addressList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Notification> notificationList = new ArrayList<>();
 
     static public Member create (String userName, String password,String nickName, String email, String role){
       Member member = new Member();

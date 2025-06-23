@@ -5,25 +5,27 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
+import somt.somt.domain.comment.entity.Comment;
+import somt.somt.domain.genre.entity.GenreProduct;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    private Long product_genre_id;
 
     @Column(name = "price" ,nullable = false)
-    private MediaType price;
+    private BigDecimal price;
 
     @Column(name = "number" ,nullable = false)
     private Integer number;
@@ -37,6 +39,12 @@ public class ProductEntity {
     private String img4;
 
     private String img5;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
+    private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<GenreProduct> genreProductList;
 
     @Column(name = "content" ,nullable = false)
     private String content;
