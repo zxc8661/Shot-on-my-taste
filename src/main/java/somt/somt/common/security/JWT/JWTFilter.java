@@ -114,7 +114,8 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
 
-        CustomUserData customUserData = new CustomUserData(memberId, username, nickname, role, "tmp");
+//        CustomUserData customUserData = new CustomUserData(memberId, username, nickname, role, "tmp");
+        CustomUserData customUserData = new CustomUserData(memberId,username,role,"tmp",nickname);
 
         CustomUserDetails customUserDetails = new CustomUserDetails(customUserData);
 
@@ -123,6 +124,7 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+
 
     }
 

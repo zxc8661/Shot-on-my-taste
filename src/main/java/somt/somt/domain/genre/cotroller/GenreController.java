@@ -17,13 +17,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/genres")
+@RequestMapping("/api")
 public class GenreController {
 
     private final GenreService genreService;
 
 
-    @PostMapping
+    @PostMapping("/admin/genre")
     public ResponseEntity<?> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid GenreRequest genreRequest){

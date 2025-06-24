@@ -37,6 +37,7 @@ public class SecurityConfig {
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
     private final JwtAuthenticationEntryPoint jwtEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
 
     @Bean
@@ -73,11 +74,10 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((auth) -> auth
 
-                        .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/member/login" ,
-                                "/api/member/register" ,
-                                "/api/member/logout").permitAll()
+                        .requestMatchers("/api/member/login", "/api/member/register", "/api/member/logout").permitAll()  // 누구나 접근 가능
+                        .requestMatchers("/api/public/**").permitAll()  // 누구나 접근 가능
+                        .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")  // USER or ADMIN 권한 필요
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")  // ADMIN 권한 필요
                         .anyRequest().authenticated() // 인증 필요
                 )
                 .headers(headers -> headers
@@ -87,6 +87,7 @@ public class SecurityConfig {
 
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(jwtEntryPoint)  // 인증 실패 시 JSON 응답
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
 
 
