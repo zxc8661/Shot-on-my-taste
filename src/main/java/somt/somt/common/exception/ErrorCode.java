@@ -20,6 +20,11 @@ public enum ErrorCode {
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST,"NickName is duplicate."),
     BAD_REGISTER_REQUEST(HttpStatus.BAD_REQUEST,"Bad register request"),
 
+    // === Genre 관련 에러 ===
+    GENRE_EXIST(HttpStatus.BAD_REQUEST,"This genre exist"),
+    NOT_FOUND_GENRE(HttpStatus.NOT_FOUND,"Genre not found"),
+
+
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "Token has expired."),

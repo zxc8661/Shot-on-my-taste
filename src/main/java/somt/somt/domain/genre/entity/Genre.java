@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import somt.somt.domain.genre.dto.GenreRequest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,9 +24,20 @@ public class Genre {
     private String name;
 
     @OneToMany(mappedBy = "genre",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<GenreProduct> genreProductList;
+    private List<GenreProduct> genreProductList = new ArrayList<>();
 
 
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
+
+    public static Genre create(GenreRequest genreCreateRequest){
+        Genre genre = new Genre();
+        genre.createAt=LocalDateTime.now();
+        genre.name = genreCreateRequest.getName();
+        return genre;
+    }
+
+    public void modify(String newName){
+        this.name = newName;
+    }
 }
