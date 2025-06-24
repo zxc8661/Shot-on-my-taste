@@ -37,6 +37,7 @@ public class Genre {
         Genre genre = new Genre();
         genre.createAt=LocalDateTime.now();
         genre.name = genreCreateRequest.getName();
+        genre.modifyAt=LocalDateTime.now();
         return genre;
     }
 

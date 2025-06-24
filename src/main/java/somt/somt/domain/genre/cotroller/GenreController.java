@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import somt.somt.common.exception.CustomException;
-import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
-import somt.somt.common.security.service.AuthorityCheck;
 import somt.somt.domain.genre.dto.GenreRequest;
 import somt.somt.domain.genre.dto.GenreResponse;
 import somt.somt.domain.genre.service.GenreService;
@@ -24,11 +21,9 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
-    private final AuthorityCheck authorityCheck;
 
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN)'") //
     public ResponseEntity<?> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid GenreRequest genreRequest){
