@@ -3,8 +3,8 @@ package somt.somt.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import somt.somt.common.config.PasswordConfig;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
@@ -17,6 +17,7 @@ import somt.somt.domain.member.repository.MemberRepository;
 public class MemberService {
 
     final private MemberRepository memberRepository;
+    final private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 회원가입 메소드
@@ -39,7 +40,8 @@ public class MemberService {
         }
 
 
-        String encodePassword = PasswordConfig.encode(requestDTO.getPassword1());
+        String encodePassword = bCryptPasswordEncoder.encode(requestDTO.getPassword1());
+
 
 
        Member user = Member.create(requestDTO.getUserName(),

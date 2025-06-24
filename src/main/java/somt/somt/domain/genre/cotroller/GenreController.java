@@ -4,7 +4,13 @@ package somt.somt.domain.genre.cotroller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.exception.CustomException;
+import somt.somt.common.exception.ErrorCode;
+import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.common.security.service.AuthorityCheck;
 import somt.somt.domain.genre.dto.GenreRequest;
 import somt.somt.domain.genre.dto.GenreResponse;
 import somt.somt.domain.genre.service.GenreService;
@@ -18,11 +24,15 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
+    private final AuthorityCheck authorityCheck;
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN)'") //
     public ResponseEntity<?> create(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody @Valid GenreRequest genreRequest){
+
 
         genreService.create(genreRequest);
 
@@ -39,14 +49,21 @@ public class GenreController {
     }
 
     @PutMapping("/{genreId}")
-    public ResponseEntity<?> modify(@PathVariable(name = "genreId") Long genreId,
+    public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @PathVariable(name = "genreId") Long genreId,
                                     @RequestBody @Valid GenreRequest genreRequest){
+
+
         genreService.modify(genreId,genreRequest);
         return ResponseEntity.ok("장르가 수정되었습니다.");
     }
 
     @DeleteMapping("/{genreId}")
-    public ResponseEntity<?> delete(@PathVariable(name = "genreId") Long genreId){
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @PathVariable(name = "genreId") Long genreId){
+
+
+
         genreService.delete(genreId);
         return ResponseEntity.ok("장르가 삭제되었습니다.");
     }

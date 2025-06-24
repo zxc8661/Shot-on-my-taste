@@ -37,6 +37,7 @@ public enum ErrorCode {
     IS_NOT_REFRESHTOKEN(HttpStatus.UNAUTHORIZED, "Not a refresh token."),
     WITHDRAWAL_MEMBER(HttpStatus.BAD_REQUEST,"This member is withdrawal"),
     NOT_FOUND_ACCESSTOKEN(HttpStatus.NOT_FOUND,"AccessToken not found"),
+    NOT_ADMIN(HttpStatus.UNAUTHORIZED,"You are not admin"),
 
     // === 공통 / 잘못된 요청 에러 ===
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request.");

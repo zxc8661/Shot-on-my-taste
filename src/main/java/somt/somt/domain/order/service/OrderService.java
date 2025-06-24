@@ -7,6 +7,6 @@ import somt.somt.domain.product.repository.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class OrderService {
     private final ProductRepository productRepository;
 }

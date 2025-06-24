@@ -30,6 +30,9 @@ public class Genre {
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
 
+    @Column(name = "modify_at",nullable = false)
+    private LocalDateTime modifyAt;
+
     public static Genre create(GenreRequest genreCreateRequest){
         Genre genre = new Genre();
         genre.createAt=LocalDateTime.now();
@@ -38,6 +41,8 @@ public class Genre {
     }
 
     public void modify(String newName){
+
         this.name = newName;
+        this.modifyAt = LocalDateTime.now();
     }
 }
