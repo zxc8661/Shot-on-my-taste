@@ -31,11 +31,24 @@ public class GenreService {
 
     }
 
+    @Transactional
+    public void create(String name){
+        alreadyExist(name);
+
+        Genre newGenre = new Genre();
+
+    }
+
+
 
     public List<GenreResponse> getGenreList(){
         List<Genre> genreList = genreRepository.findAll();
 
         return genreList.stream().map(GenreResponse::new).collect(Collectors.toList());
+    }
+
+    public Genre getGere(String name){
+        return genreRepository.findByName(name);
     }
 
 

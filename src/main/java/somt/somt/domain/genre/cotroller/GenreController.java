@@ -43,7 +43,7 @@ public class GenreController {
         return ResponseEntity.ok(responseList);
     }
 
-    @PutMapping("/{genreId}")
+    @PutMapping("/admin/genres/{genreId}")
     public ResponseEntity<?> modify(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @PathVariable(name = "genreId") Long genreId,
                                     @RequestBody @Valid GenreRequest genreRequest){
@@ -53,7 +53,7 @@ public class GenreController {
         return ResponseEntity.ok("장르가 수정되었습니다.");
     }
 
-    @DeleteMapping("/{genreId}")
+    @DeleteMapping("/admin/genres/{genreId}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @PathVariable(name = "genreId") Long genreId){
 

@@ -8,4 +8,6 @@ import somt.somt.domain.genre.entity.Genre;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre,Long> {
     boolean existsByName(String name);
+
+    Genre findByName(String name);
 }

@@ -2,6 +2,7 @@ package somt.somt.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
@@ -24,6 +25,9 @@ public enum ErrorCode {
     GENRE_EXIST(HttpStatus.BAD_REQUEST,"This genre exist"),
     NOT_FOUND_GENRE(HttpStatus.NOT_FOUND,"Genre not found"),
 
+    // === Product 관련 에러 ===
+    NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,"Product not found"),
+
 
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
@@ -40,7 +44,9 @@ public enum ErrorCode {
     NOT_ADMIN(HttpStatus.UNAUTHORIZED,"You are not admin"),
 
     // === 공통 / 잘못된 요청 에러 ===
+    BAD_FILEPATH(HttpStatus.BAD_REQUEST,"Bad filePath"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

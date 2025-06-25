@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import somt.somt.domain.genre.dto.GenreRequest;
+import somt.somt.domain.genreProduct.entity.GenreProduct;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,9 +42,17 @@ public class Genre {
         return genre;
     }
 
+    public static Genre create(String name){
+        Genre genre = new Genre();
+        genre.createAt=LocalDateTime.now();
+        genre.modifyAt=LocalDateTime.now();
+        return genre;
+    }
     public void modify(String newName){
 
         this.name = newName;
         this.modifyAt = LocalDateTime.now();
     }
+
+
 }
