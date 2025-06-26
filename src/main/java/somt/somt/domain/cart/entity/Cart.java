@@ -29,7 +29,7 @@ public class Cart {
     private Product product;
 
     @Column(nullable = false)
-    private Integer count;
+    private Integer amount;
 
 
     @Column(name = "create_at",nullable = false)

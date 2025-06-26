@@ -8,8 +8,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.cart.dto.CartRequest;
+import somt.somt.domain.cart.dto.CartResponse;
 import somt.somt.domain.cart.service.CartService;
 import somt.somt.domain.product.service.ProductService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +26,9 @@ public class CartController {
             @AuthenticationPrincipal CustomUserDetails userDetails
             )
     {
-        return ResponseEntity.status(HttpStatus.FOUND).body("cart 탐색 성공");
+        List<CartResponse> cartList = cartService.getCarts(userDetails);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(cartList);
     }
 
     @PostMapping("/user/cart")
