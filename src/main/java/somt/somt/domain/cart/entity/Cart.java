@@ -43,4 +43,8 @@ public class Cart {
         this.amount = amount;
         this.createAt = LocalDateTime.now();
     }
+
+    public void amountModify(Integer amount){
+        this.amount = amount;
+    }
 }

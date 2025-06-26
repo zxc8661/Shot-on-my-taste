@@ -42,7 +42,10 @@ public class CartController {
 
     @PutMapping("/user/{cartId}")
     public ResponseEntity<?> modifyCartAmount(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                              @PathVariable(name = "cartId") Long cartId){
+                                              @PathVariable(name = "cartId") Long cartId,
+                                              @RequestParam(name = "amount") Integer amount){
+
+        cartService.modifyCartAmount(userDetails,cartId,amount);
         return ResponseEntity.status(HttpStatus.OK).body("수량 변경 성공");
     }
 

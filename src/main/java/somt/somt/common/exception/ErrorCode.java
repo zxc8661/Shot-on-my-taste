@@ -28,6 +28,9 @@ public enum ErrorCode {
     // === Product 관련 에러 ===
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,"Product not found"),
 
+    // === Cart 관련 에러 ===
+    NOT_FOUND_CART(HttpStatus.NOT_FOUND,"Cart not found" ),
+    CART_ACCESS_DENIED(HttpStatus.UNAUTHORIZED,"You are not authorized to access this cart" ),
 
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
