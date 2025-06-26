@@ -46,6 +46,7 @@ public class CartService {
     }
 
 
+    @Transactional
     public void modifyCartAmount(CustomUserDetails userDetails, Long cartId, Integer amount) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CART));
@@ -54,9 +55,10 @@ public class CartService {
 
         cart.amountModify(amount);
 
-        cartRepository.save(cart);
+
     }
 
+    @Transactional
     public void deleteCart(CustomUserDetails userDetails, Long cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CART));
@@ -68,7 +70,7 @@ public class CartService {
 
 
     private void authorityCheck(Long memberId,Long cartMemberId){
-        if(memberId!=cartMemberId){
+        if(!Objects.equals(memberId, cartMemberId)){
             throw new CustomException(ErrorCode.CART_ACCESS_DENIED);
         }
 
