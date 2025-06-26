@@ -50,12 +50,27 @@ public class CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CART));
 
-        if(!Objects.equals(userDetails.getMemberId(), cart.getMember().getId())){
-            throw new CustomException(ErrorCode.CART_ACCESS_DENIED);
-        }
+       authorityCheck(userDetails.getMemberId(),cart.getMember().getId());
 
         cart.amountModify(amount);
 
         cartRepository.save(cart);
+    }
+
+    public void deleteCart(CustomUserDetails userDetails, Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CART));
+
+        authorityCheck(userDetails.getMemberId(),cart.getMember().getId());
+
+        cartRepository.delete(cart);
+    }
+
+
+    private void authorityCheck(Long memberId,Long cartMemberId){
+        if(memberId!=cartMemberId){
+            throw new CustomException(ErrorCode.CART_ACCESS_DENIED);
+        }
+
     }
 }

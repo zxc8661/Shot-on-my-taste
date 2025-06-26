@@ -52,6 +52,7 @@ public class CartController {
     @DeleteMapping("/user/{cartId}")
     public ResponseEntity<?> deleteCart(@AuthenticationPrincipal CustomUserDetails userDetails,
                                         @PathVariable(name = "cartId")Long cartId){
+        cartService.deleteCart(userDetails,cartId);
         return ResponseEntity.status(HttpStatus.OK).body("cart 삭제 성공");
     }
 
