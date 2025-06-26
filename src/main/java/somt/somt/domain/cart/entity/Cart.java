@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.product.entity.Product;
 
@@ -35,4 +36,11 @@ public class Cart {
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
 
+
+    public Cart(Member member,Product product, Integer amount){
+        this.member = member;
+        this.product = product;
+        this.amount = amount;
+        this.createAt = LocalDateTime.now();
+    }
 }

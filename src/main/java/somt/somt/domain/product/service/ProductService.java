@@ -156,4 +156,9 @@ public class ProductService {
 
         productRepository.delete(product);
     }
+
+    public Product getProduct(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+    }
 }

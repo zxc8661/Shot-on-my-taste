@@ -63,11 +63,14 @@ public class MemberService {
 
 
     public void withdrawal(CustomUserDetails userDetails) {
-        Member preMember = memberRepository.findById(userDetails.getMemberId())
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
+        Member preMember = getMember(userDetails.getMemberId());
         preMember.setIsActive();
         preMember.setModifyAt();
         memberRepository.save(preMember);
+    }
+
+    public Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
     }
 }

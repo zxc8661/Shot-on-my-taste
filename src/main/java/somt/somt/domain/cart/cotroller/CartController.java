@@ -1,6 +1,7 @@
 package somt.somt.domain.cart.cotroller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,9 @@ public class CartController {
 
     @PostMapping("/user/cart")
     public ResponseEntity<?> createCart(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                        @RequestBody CartRequest cartRequest){
+                                        @RequestBody @Valid CartRequest cartRequest){
+
+        cartService.create(userDetails,cartRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("cart 생성 성공");
     }
 
