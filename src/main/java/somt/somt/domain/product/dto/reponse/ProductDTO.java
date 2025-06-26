@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,6 @@ public class ProductDTO {
 
     private String img;
 
-    private List<String> genres;
+    private List<String> genres = new ArrayList<>();
 
 }

@@ -18,9 +18,9 @@ public class ProductDetailDTO {
     private Long id;
     private String productName;
     private Integer stock;
-    private List<String> images;
+    private List<String> images= new ArrayList<>();
     private String content;
-    private List<String> genres;
+    private List<String> genres=new ArrayList<>();
     private LocalDateTime createAt;
     private LocalDateTime modifyAt;
 

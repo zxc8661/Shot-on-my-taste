@@ -11,6 +11,7 @@ import somt.somt.domain.product.dto.request.ProductRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,10 +44,10 @@ public class Product {
     private String img5;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
-    private List<Comment> commentList;
+    private List<Comment> commentList =new ArrayList<>();
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<GenreProduct> genreProductList;
+    private List<GenreProduct> genreProductList= new ArrayList<>();
 
     @Column(name = "content" ,nullable = false)
     private String content;

@@ -23,6 +23,7 @@ import somt.somt.domain.product.repository.ProductRepository;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -96,8 +97,15 @@ public class ProductService {
                 productRequest.getStock()
         );
 
+        List<String> oldPaths = Stream.of(
+                        product.getImg1(), product.getImg2(),
+                        product.getImg3(), product.getImg4(), product.getImg5()
+                )
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
         try {
-            imageHandler.deleteImage(List.of(product.getImg1(), product.getImg2(), product.getImg3(), product.getImg4(), product.getImg5()));
+            imageHandler.deleteImage(oldPaths);
         }catch (IOException e){
             throw new CustomException(ErrorCode.BAD_FILEPATH);
         }
