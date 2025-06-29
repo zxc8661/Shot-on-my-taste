@@ -32,6 +32,9 @@ public enum ErrorCode {
     NOT_FOUND_CART(HttpStatus.NOT_FOUND,"Cart not found" ),
     CART_ACCESS_DENIED(HttpStatus.UNAUTHORIZED,"You are not authorized to access this cart" ),
 
+    // === Address 관련 에러 ===
+    NOT_FOUND_ADDRESS(HttpStatus.NOT_FOUND,"Address not found"),
+
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "Token has expired."),
@@ -48,7 +51,8 @@ public enum ErrorCode {
 
     // === 공통 / 잘못된 요청 에러 ===
     BAD_FILEPATH(HttpStatus.BAD_REQUEST,"Bad filePath"),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request.");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request."),
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED,"You can't access because  your member ID does not match.");
 
 
     private final HttpStatus httpStatus;

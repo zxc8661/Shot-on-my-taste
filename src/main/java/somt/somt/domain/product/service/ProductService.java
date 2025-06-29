@@ -15,6 +15,7 @@ import somt.somt.domain.genre.entity.Genre;
 import somt.somt.domain.genre.service.GenreService;
 import somt.somt.domain.genreProduct.entity.GenreProduct;
 import somt.somt.domain.genreProduct.service.GenreProductService;
+import somt.somt.domain.product.dto.reponse.ProductDTO;
 import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.entity.Product;
@@ -45,7 +46,7 @@ public class ProductService {
                             .map(gp->gp.getGenre().getName())
                             .collect(Collectors.toList());
 
-                   return new somt.somt.domain.product.dto.reponse.ProductDTO(p.getId(),p.getProductName(),p.getPrice(),p.getImg1(),genres);
+                   return new ProductDTO(p.getId(),p.getProductName(),p.getPrice(),p.getImg1(),genres);
                 })
                 .collect(Collectors.toList());
 
