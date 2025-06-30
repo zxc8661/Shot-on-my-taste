@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.product.entity.Product;
 
@@ -49,4 +50,29 @@ public class Comment {
 
     @Column(name="modify_at" ,nullable = false)
     private LocalDateTime modifyAt;
+
+    public Comment(Member member, Product product,String content,Integer grade){
+        this.member = member;
+        this.product = product;
+        this.content = content;
+        this.grade = grade;
+        this.createAt = LocalDateTime.now();
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    public Comment(Member member, Product product,String content,Integer grade,Long parentId){
+        this.member = member;
+        this.product = product;
+        this.content = content;
+        this.grade = grade;
+        this.parentId = parentId;
+        this.createAt = LocalDateTime.now();
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    public void modify(CommentRequest commentRequest) {
+        this.content= commentRequest.getContent();
+        this.grade = commentRequest.getGrade();
+        this.modifyAt  = LocalDateTime.now();
+    }
 }

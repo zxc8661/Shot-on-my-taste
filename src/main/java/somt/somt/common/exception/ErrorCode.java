@@ -35,6 +35,9 @@ public enum ErrorCode {
     // === Address 관련 에러 ===
     NOT_FOUND_ADDRESS(HttpStatus.NOT_FOUND,"Address not found"),
 
+    // === Comment 관련 에러 ===
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND,"Comment ot found"),
+
     // === JWT / Token 관련 에러 ===
     SERIALIZATION_FAIL(HttpStatus.BAD_REQUEST, "Serialization failed."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "Token has expired."),
