@@ -1,4 +1,4 @@
-package somt.somt.domain.comment.cotroller;
+package somt.somt.domain.comment.controller;
 
 
 import jakarta.validation.Valid;
@@ -11,7 +11,6 @@ import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.comment.dto.CommentResponse;
 import somt.somt.domain.comment.service.CommentService;
-import somt.somt.domain.product.service.ProductService;
 
 import java.util.List;
 import java.util.Map;
@@ -40,14 +39,14 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/user/comments/son/{commentId}")
+    @GetMapping("/user/comments/{commentId}/replies")
     public ResponseEntity<?> getSonCommentList(@PathVariable(name = "commentId") Long commentId){
         List<CommentResponse> response = commentService.getSonCommentList(commentId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @PutMapping("/user/comment/{commentId}")
+    @PutMapping("/user/comments/{commentId}")
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentRequest commentRequest,
                                            @PathVariable(name = "commentId") Long commentId) {
@@ -56,7 +55,7 @@ public class CommentController {
     }
 
 
-    @DeleteMapping("/user/comment/{commentId}")
+    @DeleteMapping("/user/comments/{commentId}")
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);
