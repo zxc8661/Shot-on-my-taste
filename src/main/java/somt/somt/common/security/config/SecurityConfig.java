@@ -74,7 +74,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((auth) -> auth
 
-                        .requestMatchers("/api/member/login", "/api/member/register", "/api/member/logout").permitAll()  // 누구나 접근 가능
+                        .requestMatchers("/api/member/login", "/api/member/register", "/api/member/logout","/").permitAll()  // 누구나 접근 가능
                         .requestMatchers("/api/public/**").permitAll()  // 누구나 접근 가능
                         .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")  // USER or ADMIN 권한 필요
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")  // ADMIN 권한 필요
