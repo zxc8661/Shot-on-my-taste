@@ -20,6 +20,8 @@ import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.product.repository.ProductRepository;
+import somt.somt.domain.productThumbnail.repository.ProductThumbnailtRepository;
+import somt.somt.domain.productThumbnail.service.ProductThumbnailService;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,6 +35,7 @@ public class ProductService {
     private final ImageHandler imageHandler;
     private final GenreService genreService;
     private final GenreProductService genreProductService;
+    private final ProductThumbnailService productThumbnailService;
 
 
 
@@ -46,7 +49,7 @@ public class ProductService {
                             .map(gp->gp.getGenre().getName())
                             .collect(Collectors.toList());
 
-                   return new ProductDTO(p.getId(),p.getProductName(),p.getPrice(),p.getImg1(),genres);
+                   return new ProductDTO(p.getId(),p.getProductName(),p.getPrice(),p.getProductThumbnails().get(0).getImagePath(),genres);
                 })
                 .collect(Collectors.toList());
 
@@ -64,7 +67,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
-        ProductDetailDTO productDetailDTO = ProductDetailDTO.exchange(product);
+        ProductDetailDTO productDetailDTO = ProductDetailDTO.toDTO(product);
 
         return productDetailDTO;
     }
@@ -73,15 +76,10 @@ public class ProductService {
     public void create(ProductRequest ProductRequest, List<MultipartFile> imageFiles) {
         Product product = Product.create(ProductRequest);
 
-        productRepository.save(product);
+        Product saveProduct = productRepository.save(product);
 
-        List<String> filePaths=setFilePath(imageFiles);
+        productThumbnailService.uploadImageFile(imageFiles,saveProduct);
 
-        product.updateImages(filePaths);
-
-        setGenreProduct(ProductRequest.getGenres(),product);
-
-//        productRepository.save(product); 여기서 save 할필요 없는 이유 공부
 
     }
 
@@ -98,29 +96,7 @@ public class ProductService {
                 productRequest.getStock()
         );
 
-        List<String> oldPaths = Stream.of(
-                        product.getImg1(), product.getImg2(),
-                        product.getImg3(), product.getImg4(), product.getImg5()
-                )
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        try {
-            imageHandler.deleteImage(oldPaths);
-        }catch (IOException e){
-            throw new CustomException(ErrorCode.BAD_FILEPATH);
-        }
-        List<String> filePaths=setFilePath(imageFiles);
-
-        product.updateImages(filePaths);
-
-
-        product.getGenreProductList().clear();
-
-        setGenreProduct(productRequest.getGenres(),product);
-
-        productRepository.save(product);
-
+        productThumbnailService.modifyImageFile(imageFiles,product);
     }
 
 

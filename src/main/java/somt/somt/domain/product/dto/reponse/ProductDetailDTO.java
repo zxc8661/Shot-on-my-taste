@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import somt.somt.domain.genre.entity.Genre;
 import somt.somt.domain.product.entity.Product;
+import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,30 +26,22 @@ public class ProductDetailDTO {
     private LocalDateTime modifyAt;
 
 
-    public static ProductDetailDTO exchange(Product product)
-    {
+    public static ProductDetailDTO toDTO(Product product) {
         ProductDetailDTO productDetailDTO = new ProductDetailDTO();
-        productDetailDTO.productName = product.getProductName();
+        productDetailDTO.id= product.getId();
+        productDetailDTO.productName=product.getProductName();
         productDetailDTO.stock = product.getStock();
-
-        productDetailDTO.id=product.getId();
-        productDetailDTO.genres= product.getGenreProductList().stream()
-                .map(gp-> gp.getGenre().getName())
+        productDetailDTO.images=product.getProductThumbnails().stream()
+                .map(ProductThumbnail::getImagePath)
                 .toList();
-
-        productDetailDTO.images= new ArrayList<>();
-        productDetailDTO.images.add(product.getImg1());
-        productDetailDTO.images.add(product.getImg2());
-        productDetailDTO.images.add(product.getImg4());
-        productDetailDTO.images.add(product.getImg3());
-        productDetailDTO.images.add(product.getImg5());
-
-
-
+        productDetailDTO.genres = product.getGenreProductList().stream()
+                .map(genreProduct -> {
+                    Genre genre = genreProduct.getGenre();
+                    return genre.getName();})
+                .toList();
         productDetailDTO.content = product.getContent();
-
-        productDetailDTO.createAt= product.getCreateAt();
-        productDetailDTO.modifyAt=product.getModifyAt();
+        productDetailDTO.createAt = product.getCreateAt();
+        productDetailDTO.modifyAt = product.getModifyAt();
 
         return productDetailDTO;
     }

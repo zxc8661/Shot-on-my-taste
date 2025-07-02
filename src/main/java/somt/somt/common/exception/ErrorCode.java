@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
+import somt.somt.domain.productThumbnail.service.ProductThumbnailService;
 
 @Getter
 @RequiredArgsConstructor
@@ -28,6 +30,10 @@ public enum ErrorCode {
     // === Product 관련 에러 ===
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,"Product not found"),
 
+    // === ProductThumbnail 관련 에러 ===
+    IMAGE_FILE_EMPTY(HttpStatus.BAD_REQUEST,"Image file empty."),
+    IMAGE_FILE_SAVE_FAIL(HttpStatus.BAD_REQUEST, "Image cant save"),
+    IMAGE_DELETE_FAIL(HttpStatus.BAD_REQUEST,"Cant found fail" ),
     // === Cart 관련 에러 ===
     NOT_FOUND_CART(HttpStatus.NOT_FOUND,"Cart not found" ),
     CART_ACCESS_DENIED(HttpStatus.UNAUTHORIZED,"You are not authorized to access this cart" ),
@@ -56,6 +62,7 @@ public enum ErrorCode {
     BAD_FILEPATH(HttpStatus.BAD_REQUEST,"Bad filePath"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad request."),
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED,"You can't access because  your member ID does not match.");
+
 
 
     private final HttpStatus httpStatus;

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import somt.somt.domain.comment.entity.Comment;
 import somt.somt.domain.genreProduct.entity.GenreProduct;
 import somt.somt.domain.product.dto.request.ProductRequest;
+import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,15 +34,8 @@ public class Product {
     @Column(name = "stock" ,nullable = false)
     private Integer stock;
 
-
-    private String img1;
-
-    private String img2;
-
-    private String img3;
-    private String img4;
-
-    private String img5;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
+    private List<ProductThumbnail> productThumbnails = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
     private List<Comment> commentList =new ArrayList<>();
@@ -71,13 +65,7 @@ public class Product {
 
     }
 
-    public void updateImages(List<String> filePaths) {
-        if (filePaths.size() > 0) this.img1 = filePaths.get(0);
-        if (filePaths.size() > 1) this.img2 = filePaths.get(1);
-        if (filePaths.size() > 2) this.img3 = filePaths.get(2);
-        if (filePaths.size() > 3) this.img4 = filePaths.get(3);
-        if (filePaths.size() > 4) this.img5 = filePaths.get(4);
-    }
+
 
     public void modifyBasicInfo(String productName, String content,BigDecimal price, Integer stock) {
 

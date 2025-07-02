@@ -8,6 +8,7 @@ import org.springframework.security.core.parameters.P;
 import somt.somt.domain.cart.entity.Cart;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
 import somt.somt.domain.product.entity.Product;
+import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +33,9 @@ public class CartResponse {
                 product.getId(),
                 product.getProductName(),
                 product.getPrice(),
-                product.getImg1(),
+                product.getProductThumbnails().stream()
+                        .map(ProductThumbnail::getImagePath)
+                        .toList().get(0),
                 product.getGenreProductList().stream()
                         .map(gp->gp.getGenre().getName())
                         .collect(Collectors.toList())

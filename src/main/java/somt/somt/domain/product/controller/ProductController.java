@@ -45,13 +45,12 @@ public class ProductController {
     }
 
 
-    @PostMapping(value = "/admin/products",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //여기 공부 필요
+    @PostMapping("/admin/products") //여기 공부 필요
     public ResponseEntity<?> create(
-            @RequestBody ProductRequest productCreate,
-            @RequestPart List<MultipartFile> imageFiles){
+            @Valid @RequestParam(name = "imageFiles") List<MultipartFile> imageFiles,
+            @Valid @ModelAttribute ProductRequest productRequest){
 
-        productService.create(productCreate,imageFiles);
+        productService.create(productRequest,imageFiles);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("product 생성 성공");
     }

@@ -1,6 +1,7 @@
 package somt.somt.domain.product.dto.request;
 
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ public class ProductRequest {
     private String productName;
 
     @NotNull
+    @Min(0)
     private BigDecimal price;
 
     @NotNull
