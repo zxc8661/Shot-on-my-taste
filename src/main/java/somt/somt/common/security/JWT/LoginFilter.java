@@ -32,7 +32,7 @@ import java.util.Map;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUil;
+    private final JWTUtil jwtUtil;
 
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
@@ -44,10 +44,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
+        System.out.println("LoginFilter1");
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> requestMap = objectMapper.readValue(request.getInputStream(), Map.class);
+            Map<String, String> requestMap = this.objectMapper.readValue(request.getInputStream(), Map.class);
 
             String username = requestMap.get("userName");
             String password = requestMap.get("password");
@@ -77,8 +78,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String accessToken = jwtUil.createJwt("access", username, memberId, nickname, role, 1);
-        String refreshToken = jwtUil.createJwt("refresh", username, memberId, nickname, role, 2);
+        String accessToken = jwtUtil.createJwt("access", username, memberId, nickname, role, 1);
+        String refreshToken = jwtUtil.createJwt("refresh", username, memberId, nickname, role, 2);
 
         redisRepository.save(refreshToken, accessToken, 86400000L);
 

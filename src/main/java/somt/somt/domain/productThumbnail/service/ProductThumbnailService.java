@@ -51,7 +51,6 @@ public class ProductThumbnailService {
         Path uploadDir = Paths.get(BASE_PATH + product.getId());
         File dir = uploadDir.toFile();
         if (dir.exists()) {
-            // 디렉토리와 안의 모든 파일/서브디렉토리까지 삭제
             boolean deleted = FileSystemUtils.deleteRecursively(dir);
             if (!deleted) {
                 throw new CustomException(ErrorCode.IMAGE_DELETE_FAIL);

@@ -96,7 +96,7 @@ public class SecurityConfig {
 
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 유효성 검사
 
-                .addFilterBefore(new LogoutFilter(jwtUtil, redisRepository),  UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new LogoutFilter(jwtUtil, redisRepository),  UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  //세션 stateless 상태 설정

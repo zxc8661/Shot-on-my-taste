@@ -3,24 +3,24 @@ package somt.somt.common.security.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.JWT.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 
 
+
+@RestController
+@RequiredArgsConstructor
 public class ReissueController {
 
     final private JWTUtil jwtUtil;
     final private RedisRepository redisRepository;
 
-
-    public ReissueController(JWTUtil jwtUtil , RedisRepository redisRepository){
-        this.jwtUtil = jwtUtil;
-        this.redisRepository = redisRepository;
-    }
 
 
     /**
@@ -37,6 +37,12 @@ public class ReissueController {
         String refresh = null;
         Cookie[] cookies = request.getCookies();
 
+        if (cookies == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("no cookies in request");
+        }
+        
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("refresh")){
                 refresh = cookie.getValue();

@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.service.ProductService;
@@ -45,14 +47,19 @@ public class ProductController {
     }
 
 
-    @PostMapping("/admin/products") //여기 공부 필요
+    @PostMapping(
+            value    = "/public/products",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<?> create(
-            @Valid @RequestParam(name = "imageFiles") List<MultipartFile> imageFiles,
-            @Valid @ModelAttribute ProductRequest productRequest){
-
-        productService.create(productRequest,imageFiles);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("product 생성 성공");
+            @ModelAttribute @Valid ProductRequest dto,
+            @RequestParam("imageFiles") List<MultipartFile> files
+    ) {
+        System.out.println("glgl");
+        productService.create(dto, files);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("good");
     }
 
     @PutMapping("/admin/products/{productId}")

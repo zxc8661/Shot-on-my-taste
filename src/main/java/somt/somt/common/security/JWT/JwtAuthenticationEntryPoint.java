@@ -26,7 +26,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         ErrorCode code = failed.getCause() instanceof CustomException
                 ? ((CustomException)failed.getCause()).getErrorCode()
-                : ErrorCode.BAD_REQUEST;
+                : ErrorCode.NOT_FOUND_MEMBER;
 
         ErrorResponse err = new ErrorResponse(code);
         response.setStatus(code.getHttpStatus().value());
