@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.member.dto.LoginRequestDTO;
 import somt.somt.domain.member.dto.RegisterRequestDTO;
@@ -24,7 +26,11 @@ public class MemberController {
 
         userService.register(registerRequestDTO);
 
-        return ResponseEntity.ok("회원가입에 성공했습니다");
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new CustomResponse<>(true,"회원가입 성공",null)
+        );
     }
 
 
