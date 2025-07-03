@@ -2,22 +2,34 @@ package somt.somt.common.security.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import somt.somt.common.exception.CustomException;
+import somt.somt.common.exception.ErrorCode;
+import somt.somt.common.exception.ErrorResponse;
 import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.JWT.*;
+
+import java.io.IOException;
 
 
 /**
@@ -102,5 +114,42 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  //세션 stateless 상태 설정
 
         return http.build();
+    }
+
+    @Component
+    @RequiredArgsConstructor
+    public static class JwtAccessDeniedHandler implements AccessDeniedHandler {
+
+        private final ObjectMapper objectMapper;
+
+        @Override
+        public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
+                throws IOException, ServletException {
+
+            ErrorResponse err = new ErrorResponse(ErrorCode.NOT_ADMIN);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            objectMapper.writeValue(response.getWriter(), err);
+        }
+    }
+
+    @Component
+    @RequiredArgsConstructor
+    public static class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+        private final ObjectMapper objectMapper;
+
+
+        @Override
+        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+            ErrorCode code = failed.getCause() instanceof CustomException
+                    ? ((CustomException)failed.getCause()).getErrorCode()
+                    : ErrorCode.NOT_FOUND_MEMBER;
+
+            ErrorResponse err = new ErrorResponse(code);
+            response.setStatus(code.getHttpStatus().value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            objectMapper.writeValue(response.getWriter(), err);
+        }
     }
 }

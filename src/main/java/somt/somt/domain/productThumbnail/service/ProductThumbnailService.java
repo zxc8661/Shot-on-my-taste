@@ -29,7 +29,7 @@ public class ProductThumbnailService {
     private final ProductThumbnailtRepository productThumbnailtRepository;
 
     @Value("${spring.upload.image}")
-    static private String BASE_PATH;
+     private String BASE_PATH;
 
 
 

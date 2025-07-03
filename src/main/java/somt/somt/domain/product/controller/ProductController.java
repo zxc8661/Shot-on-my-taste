@@ -14,6 +14,7 @@ import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.service.ProductService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -47,19 +48,16 @@ public class ProductController {
     }
 
 
-    @PostMapping(
-            value    = "/public/products",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    @PostMapping("/admin/products")
     public ResponseEntity<?> create(
             @ModelAttribute @Valid ProductRequest dto,
             @RequestParam("imageFiles") List<MultipartFile> files
-    ) {
-        System.out.println("glgl");
+    ) throws IOException {
+
         productService.create(dto, files);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("good");
+                .body(dto.getContent());
     }
 
     @PutMapping("/admin/products/{productId}")

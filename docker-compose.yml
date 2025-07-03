@@ -10,11 +10,17 @@ services:
       MYSQL_DATABASE: somt
       MYSQL_USER: user
       MYSQL_PASSWORD: root
+      TZ: Asia/Seoul
+      # utf8mb4 문자셋과 콜레이션 설정
+      command: >
+        --character-set-server=utf8mb4
+        --collation-server=utf8mb4_unicode_ci
     ports:
       - "3306:3306"
 
   redis:
     image: redis
     container_name: somt_redis
+    restart: always
     ports:
       - "6379:6379"

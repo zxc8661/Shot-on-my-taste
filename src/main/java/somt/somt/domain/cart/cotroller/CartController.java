@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/app")
+@RequestMapping("/api")
 public class CartController {
 
     private final CartService cartService;
@@ -40,7 +40,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body("cart 생성 성공");
     }
 
-    @PutMapping("/user/{cartId}")
+    @PutMapping("/user/cart/{cartId}")
     public ResponseEntity<?> modifyCartAmount(@AuthenticationPrincipal CustomUserDetails userDetails,
                                               @PathVariable(name = "cartId") Long cartId,
                                               @RequestParam(name = "amount") Integer amount){

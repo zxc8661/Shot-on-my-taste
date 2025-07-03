@@ -34,7 +34,7 @@ public class GenreController {
         return ResponseEntity.ok("장르 추가 완료");
     }
 
-    @GetMapping
+    @GetMapping("/public/genres")
     public ResponseEntity<?> genres(){
 
         List<GenreResponse> responseList = genreService.getGenreList();
