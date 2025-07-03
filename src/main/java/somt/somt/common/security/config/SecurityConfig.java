@@ -28,6 +28,8 @@ import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.exception.ErrorResponse;
 import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.JWT.*;
+import somt.somt.common.security.exception.CustomAccessDeniedHandler;
+import somt.somt.common.security.exception.CustomAuthenticationEntryPoint;
 
 import java.io.IOException;
 
@@ -48,8 +50,8 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
-    private final JwtAuthenticationEntryPoint jwtEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
     @Bean
@@ -98,8 +100,8 @@ public class SecurityConfig {
                 )
 
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(jwtEntryPoint)  // 인증 실패 시 JSON 응답
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)  // 인증 실패 시 JSON 응답
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
 
 
@@ -116,40 +118,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Component
-    @RequiredArgsConstructor
-    public static class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-        private final ObjectMapper objectMapper;
-
-        @Override
-        public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
-                throws IOException, ServletException {
-
-            ErrorResponse err = new ErrorResponse(ErrorCode.NOT_ADMIN);
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-            objectMapper.writeValue(response.getWriter(), err);
-        }
-    }
-
-    @Component
-    @RequiredArgsConstructor
-    public static class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-        private final ObjectMapper objectMapper;
-
-
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-            ErrorCode code = failed.getCause() instanceof CustomException
-                    ? ((CustomException)failed.getCause()).getErrorCode()
-                    : ErrorCode.NOT_FOUND_MEMBER;
-
-            ErrorResponse err = new ErrorResponse(code);
-            response.setStatus(code.getHttpStatus().value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            objectMapper.writeValue(response.getWriter(), err);
-        }
-    }
 }

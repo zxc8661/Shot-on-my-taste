@@ -19,12 +19,7 @@ public class MemberService {
     final private MemberRepository memberRepository;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    /**
-     * 회원가입 메소드
-     * @param requestDTO
-     * @author 이광석
-     * @since 2025-06-19
-     */
+
     public void register(RegisterRequestDTO requestDTO){
         if(!requestDTO.getPassword1().equals(requestDTO.getPassword2())){
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORDS);
@@ -48,7 +43,7 @@ public class MemberService {
                encodePassword,
                requestDTO.getNickName(),
                requestDTO.getEmail(),
-               "ADMIN");
+               requestDTO.getRole());
 
 
        try {
