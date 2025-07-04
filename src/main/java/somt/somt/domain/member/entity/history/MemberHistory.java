@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class MemberHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
