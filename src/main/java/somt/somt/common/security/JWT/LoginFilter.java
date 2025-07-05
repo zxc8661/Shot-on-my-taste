@@ -21,6 +21,7 @@ import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.exception.ErrorResponse;
 import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.member.service.MemberHistoryService;
 
 import java.io.IOException;
 import java.rmi.server.ServerCloneException;
@@ -37,6 +38,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
 
+    private final MemberHistoryService memberHistoryService;
 
 
 
@@ -95,6 +97,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addHeader("Set-Cookie", refreshCookieString);
         response.addHeader("access", accessToken);
         response.setStatus(HttpStatus.OK.value());
+
+        memberHistoryService.createHistory("LOGIN",nickname+"님이 로그인 하였습니다 ",memberId);
+
     }
 
 

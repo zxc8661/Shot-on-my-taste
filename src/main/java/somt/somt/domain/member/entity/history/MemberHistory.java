@@ -32,4 +32,12 @@ public class MemberHistory {
 
     @Column(name = "happen_Time", nullable = false)
     private LocalDateTime happenTime;
+
+
+    public MemberHistory(Member member,Integer historyType,String message){
+        this.member = member;
+        this.historyType = historyType;
+        this.message = message;
+        this.happenTime = LocalDateTime.now();
+    }
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
-import somt.somt.domain.member.dto.RegisterRequestDTO;
+import somt.somt.domain.member.dto.member.RegisterRequestDTO;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.repository.MemberRepository;
 

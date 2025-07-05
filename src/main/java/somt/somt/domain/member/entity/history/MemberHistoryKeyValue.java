@@ -20,6 +20,6 @@ public class MemberHistoryKeyValue {
     private Integer databaseValue;
 
     @Column(name = "back_value",nullable = false)
-    private Integer domainValue;
+    private String domainValue;
 
 }

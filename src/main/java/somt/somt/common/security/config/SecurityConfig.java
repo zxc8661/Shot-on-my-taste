@@ -30,6 +30,7 @@ import somt.somt.common.redis.RedisRepository;
 import somt.somt.common.security.JWT.*;
 import somt.somt.common.security.exception.CustomAccessDeniedHandler;
 import somt.somt.common.security.exception.CustomAuthenticationEntryPoint;
+import somt.somt.domain.member.service.MemberHistoryService;
 
 import java.io.IOException;
 
@@ -52,7 +53,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
+    private final MemberHistoryService memberHistoryService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -71,7 +72,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, redisRepository, objectMapper);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, redisRepository, objectMapper,memberHistoryService);
         loginFilter.setFilterProcessesUrl("/api/member/login");
 
 
@@ -110,7 +111,7 @@ public class SecurityConfig {
 
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 유효성 검사
 
-                .addFilterAfter(new LogoutFilter(jwtUtil, redisRepository),  UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new LogoutFilter(jwtUtil, redisRepository,memberHistoryService),  UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  //세션 stateless 상태 설정

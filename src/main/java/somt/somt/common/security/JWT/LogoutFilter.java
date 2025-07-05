@@ -7,28 +7,28 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.filter.OncePerRequestFilter;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.redis.RedisRepository;
+import somt.somt.domain.member.service.MemberHistoryService;
 
 import java.io.IOException;
 
 /**
  * 로그아웃 필터
  */
+@RequiredArgsConstructor
 public class LogoutFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final RedisRepository redisRepository;
 
+    private final MemberHistoryService memberHistoryService;
 
-    public LogoutFilter(JWTUtil jwtUtil, RedisRepository redisRepository) {
-        this.jwtUtil = jwtUtil;
-        this.redisRepository = redisRepository;
 
-    }
 
     /**
      * 로그아웃 필터
@@ -103,5 +103,10 @@ public class LogoutFilter extends OncePerRequestFilter {
         response.addHeader("Set-Cookie", refreshCookieString);
 
         response.setStatus(HttpServletResponse.SC_OK);
+
+        memberHistoryService.createHistory(
+                "LOGOUT",
+                jwtUtil.getNickname(accessToken)+"님이 로그아웃 했습니다",
+                jwtUtil.getMemberId(accessToken));
     }
 }

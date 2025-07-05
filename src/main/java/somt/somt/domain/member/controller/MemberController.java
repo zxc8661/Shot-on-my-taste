@@ -1,7 +1,5 @@
 package somt.somt.domain.member.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,8 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
-import somt.somt.domain.member.dto.LoginRequestDTO;
-import somt.somt.domain.member.dto.RegisterRequestDTO;
+import somt.somt.domain.member.dto.member.RegisterRequestDTO;
 import somt.somt.domain.member.service.MemberService;
 
 @RestController
