@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new CustomException(ErrorCode.WITHDRAWAL_MEMBER);
         }
 
-        CustomUserData customUserData = new CustomUserData(member.getId(), member.getUserName(), member.getRole(), member.getPassword(), member.getNickName());
+        CustomUserData customUserData = new CustomUserData(member.getId(), member.getUserName(), member.getRole(), member.getPassword(), member.getNickname());
 
 
         System.out.println("권한 테스트");

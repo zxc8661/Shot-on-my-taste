@@ -55,7 +55,7 @@ public class CommentService {
                     return new CommentResponse(
                             c.getId(),
                             c.getMember().getId(),
-                            c.getMember().getNickName(),
+                            c.getMember().getNickname(),
                             c.getContent(),
                             c.getModifyAt()
                     );
@@ -78,7 +78,7 @@ public class CommentService {
                 .map(p->new CommentResponse(
                         p.getId(),
                         p.getMember().getId(),
-                        p.getMember().getNickName(),                        p.getContent(),
+                        p.getMember().getNickname(),                        p.getContent(),
                         p.getModifyAt()
                         ))
                 .toList();

@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.member.dto.member.MemberDetail;
 import somt.somt.domain.member.dto.member.RegisterRequestDTO;
 import somt.somt.domain.member.service.MemberService;
 
@@ -16,12 +17,12 @@ import somt.somt.domain.member.service.MemberService;
 @RequestMapping("/api")
 public class MemberController {
 
-    private final MemberService userService;
+    private final MemberService memberService;
 
     @PostMapping("/member/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO){
 
-        userService.register(registerRequestDTO);
+        memberService.register(registerRequestDTO);
 
 
 
@@ -33,13 +34,13 @@ public class MemberController {
 
     @PostMapping("/member/withdrawal")
     public ResponseEntity<?> withdrawal(@AuthenticationPrincipal CustomUserDetails userDetails){
-        userService.withdrawal(userDetails);
+        memberService.withdrawal(userDetails);
         return ResponseEntity.ok("회원탈퇴에 성공했습니다.");
     }
 
     @GetMapping("/public/member/checkUsername")
     public ResponseEntity<?> checkUsername(@RequestParam("userName") String userName){
-        boolean result = userService.checkUserName(userName);
+        boolean result = memberService.checkUserName(userName);
 
         if(result){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디",userName));
@@ -54,14 +55,21 @@ public class MemberController {
 
     @GetMapping("/public/member/checkNickname")
     public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname){
-        boolean result = userService.checkNickname(nickname);
+        boolean result = memberService.checkNickname(nickname);
 
         if(result){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디",nickname));
 
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(false,"닉네임 사용가능 ",nickname));
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"닉네임 사용가능 ",nickname));
 
         }
+    }
+
+    @GetMapping("/user/member/detail")
+    public ResponseEntity<?> memberDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        MemberDetail memberDetail = memberService.memberDetail(customUserDetails);
+        return ResponseEntity.ok(new CustomResponse<>(true,"멤버 상세 조회 성공",memberDetail));
     }
 }

@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.member.dto.member.MemberDetail;
 import somt.somt.domain.member.dto.member.RegisterRequestDTO;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.repository.MemberRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class MemberService {
             throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
         }
 
-        if(memberRepository.existsByNickName(requestDTO.getNickName()))
+        if(memberRepository.existsByNickname(requestDTO.getNickName()))
         {
             throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
@@ -74,6 +77,15 @@ public class MemberService {
     }
 
     public boolean checkNickname(String nickname){
-        return memberRepository.existsByNickName(nickname);
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    public MemberDetail memberDetail(CustomUserDetails customUserDetails) {
+        Member member = memberRepository.findById(customUserDetails.getMemberId())
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+
+        MemberDetail memberDetail = new MemberDetail(member.getUserName(),member.getId(),member.getEmail(),member.getNickname(),member.getCreateAt());
+
+        return memberDetail;
     }
 }

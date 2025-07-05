@@ -42,7 +42,7 @@ public class MemberHistoryService {
 
         List<MemberHistoryDTO> historyList = historyPage.stream()
                 .map(p -> new MemberHistoryDTO(
-                        p.getMember().getNickName(),
+                        p.getMember().getNickname(),
                         p.getMember().getId(),
                         toDomainValue(p.getHistoryType()),
                         p.getMessage(),

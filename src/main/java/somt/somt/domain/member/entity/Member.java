@@ -32,8 +32,8 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nick_name", nullable = false, length = 50,unique = true)
-    private String nickName;
+    @Column(name = "nickname", nullable = false, length = 50,unique = true)
+    private String nickname;
 
     @Column(name = "email", nullable = false, length = 50)
     private String email;
@@ -73,7 +73,7 @@ public class Member {
       Member member = new Member();
       member.userName = userName;
       member.password = password;
-      member.nickName = nickName;
+      member.nickname = nickName;
       member.email = email;
       member.role = role;
       member.isActive=true;
