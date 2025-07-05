@@ -1,6 +1,7 @@
 package somt.somt.domain.member.dto.member;
 
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ public class RegisterRequestDTO {
     String password2;
 
 
-    @NotBlank(message = "이메일은 필수 입력 학목입니다." )
+    @NotBlank(message = "이메일은 필수 입력 항목입니다." )
+    @Email(message = "올바른 이메일 형식이 아닙니다")
     String email;
 
     @NotBlank(message = "닉네임은 필수 입력항목입니다")
