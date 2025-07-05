@@ -68,4 +68,12 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
     }
+
+    public boolean checkUserName(String memberName) {
+        return memberRepository.existsByUserName(memberName);
+    }
+
+    public boolean checkNickname(String nickname){
+        return memberRepository.existsByNickName(nickname);
+    }
 }

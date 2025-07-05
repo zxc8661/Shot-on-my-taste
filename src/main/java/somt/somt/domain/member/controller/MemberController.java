@@ -13,12 +13,12 @@ import somt.somt.domain.member.service.MemberService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/api")
 public class MemberController {
 
     private final MemberService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/member/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerRequestDTO){
 
         userService.register(registerRequestDTO);
@@ -31,14 +31,37 @@ public class MemberController {
     }
 
 
-
-
-
-
-    @PostMapping("/withdrawal")
+    @PostMapping("/member/withdrawal")
     public ResponseEntity<?> withdrawal(@AuthenticationPrincipal CustomUserDetails userDetails){
         userService.withdrawal(userDetails);
         return ResponseEntity.ok("회원탈퇴에 성공했습니다.");
     }
 
+    @GetMapping("/public/member/checkUsername")
+    public ResponseEntity<?> checkUsername(@RequestParam("userName") String userName){
+        boolean result = userService.checkUserName(userName);
+
+        if(result){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디",userName));
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"아이디 사용가능",userName));
+
+        }
+    }
+
+
+
+    @GetMapping("/public/member/checkNickname")
+    public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname){
+        boolean result = userService.checkNickname(nickname);
+
+        if(result){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디",nickname));
+
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(false,"닉네임 사용가능 ",nickname));
+
+        }
+    }
 }
