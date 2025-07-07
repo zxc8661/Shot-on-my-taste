@@ -22,6 +22,7 @@ public enum ErrorCode {
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST,"Username is duplicate."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST,"NickName is duplicate."),
     BAD_REGISTER_REQUEST(HttpStatus.BAD_REQUEST,"Bad register request"),
+    INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST,"This email invalid" ),
 
     // === Genre 관련 에러 ===
     GENRE_EXIST(HttpStatus.BAD_REQUEST,"This genre exist"),
@@ -29,6 +30,7 @@ public enum ErrorCode {
 
     // === Product 관련 에러 ===
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,"Product not found"),
+    DUPLICATE_PRODUCTNAME(HttpStatus.BAD_REQUEST,"ProductName is duplicate." ),
 
     // === ProductThumbnail 관련 에러 ===
     IMAGE_FILE_EMPTY(HttpStatus.BAD_REQUEST,"Image file empty."),

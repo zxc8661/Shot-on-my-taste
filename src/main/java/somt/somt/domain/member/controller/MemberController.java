@@ -72,4 +72,36 @@ public class MemberController {
         MemberDetail memberDetail = memberService.memberDetail(customUserDetails);
         return ResponseEntity.ok(new CustomResponse<>(true,"멤버 상세 조회 성공",memberDetail));
     }
+
+    @PutMapping("/user/member/modify/email")
+    public ResponseEntity<?> memberModify(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam("email") String email){
+
+        memberService.modifyEmail(customUserDetails, email);
+        return ResponseEntity.ok(new CustomResponse<>(true,"이메일 수정 성공",email));
+    }
+
+    @PutMapping("/user/member/modify/nickname")
+    public ResponseEntity<?> memberNickname(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam("nickname") String nickname){
+
+        memberService.modifyNickname(customUserDetails,nickname);
+        return ResponseEntity.ok(new CustomResponse<>(true,"닉네임 수정 성공",nickname));
+    }
+
+    @PutMapping("/user/member/modify/password")
+    public ResponseEntity<?> memberPassword(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam("newpPassword") String newPassword,
+            @RequestParam("oldPassword")String oldPassword){
+
+        memberService.modifyPassword(customUserDetails,newPassword,oldPassword);
+        return ResponseEntity.ok(new CustomResponse<>(true,"비밀번호 수정 성공",""));
+    }
+
+
+
+
 }

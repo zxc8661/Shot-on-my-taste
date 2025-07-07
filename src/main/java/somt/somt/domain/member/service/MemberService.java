@@ -1,6 +1,7 @@
 package somt.somt.domain.member.service;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,8 +13,6 @@ import somt.somt.domain.member.dto.member.MemberDetail;
 import somt.somt.domain.member.dto.member.RegisterRequestDTO;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.repository.MemberRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class MemberService {
             throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
         }
 
-        if(memberRepository.existsByNickname(requestDTO.getNickName()))
+        if(memberRepository.existsByNickname(requestDTO.getNickname()))
         {
             throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
@@ -44,7 +43,7 @@ public class MemberService {
 
        Member user = Member.create(requestDTO.getUserName(),
                encodePassword,
-               requestDTO.getNickName(),
+               requestDTO.getNickname(),
                requestDTO.getEmail(),
                requestDTO.getRole());
 
@@ -81,11 +80,57 @@ public class MemberService {
     }
 
     public MemberDetail memberDetail(CustomUserDetails customUserDetails) {
-        Member member = memberRepository.findById(customUserDetails.getMemberId())
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member = getMember(customUserDetails.getMemberId());
 
-        MemberDetail memberDetail = new MemberDetail(member.getUserName(),member.getId(),member.getEmail(),member.getNickname(),member.getCreateAt());
-
-        return memberDetail;
+        return new MemberDetail(member.getUserName(),member.getId(),member.getEmail(),member.getNickname(),member.getCreateAt());
     }
+
+    @Transactional
+    public void modifyEmail(CustomUserDetails customUserDetails, String email) {
+        if(!isValidEmail(email)){
+            throw new CustomException(ErrorCode.INVALID_EMAIL_FORMAT);
+        }
+
+        Member member = getMember(customUserDetails.getMemberId());
+
+        member.modifyEmail(email);
+    }
+
+    @Transactional
+    public void modifyNickname(CustomUserDetails customUserDetails, String nickname) {
+        if(checkNickname(nickname)){
+            throw  new CustomException(ErrorCode.DUPLICATE_NICKNAME);
+        }
+
+        Member member = getMember(customUserDetails.getMemberId());
+
+        member.modifyNickname(nickname);
+
+    }
+
+
+    @Transactional
+    public void modifyPassword(CustomUserDetails customUserDetails, String newPassword, String oldPassword) {
+
+        Member member = getMember(customUserDetails.getMemberId());
+
+        if(!checkPassword(member,oldPassword)){
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORDS);
+        }
+
+
+        member.modifyPassword(bCryptPasswordEncoder.encode(newPassword));
+    }
+
+
+    private boolean checkPassword(Member member, String prePassword) {
+        return bCryptPasswordEncoder.matches(prePassword,member.getPassword());
+    }
+
+
+    private boolean isValidEmail(String email){
+        String emailRegex ="^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+
 }

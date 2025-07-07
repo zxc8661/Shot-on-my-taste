@@ -20,13 +20,11 @@ import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.product.repository.ProductRepository;
-import somt.somt.domain.productThumbnail.repository.ProductThumbnailtRepository;
 import somt.somt.domain.productThumbnail.service.ProductThumbnailService;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -73,14 +71,18 @@ public class ProductService {
     }
 
     @Transactional
-    public void create(ProductRequest ProductRequest, List<MultipartFile> imageFiles) {
-        Product product = Product.create(ProductRequest);
+    public ProductDetailDTO create(ProductRequest productRequest, List<MultipartFile> imageFiles) {
+        if(productRepository.existsByProductName(productRequest.getProductName())){
+            throw new CustomException(ErrorCode.DUPLICATE_PRODUCTNAME);
+        }
+
+        Product product = Product.create(productRequest);
 
         Product saveProduct = productRepository.save(product);
 
         productThumbnailService.uploadImageFile(imageFiles,saveProduct);
 
-
+        return ProductDetailDTO.toDTO(saveProduct);
     }
 
     @Transactional

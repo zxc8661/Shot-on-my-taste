@@ -92,4 +92,18 @@ public class Member {
         this.isActive = false;
     }
 
+    public void modifyEmail(String email) {
+        this.email = email;
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    public void modifyNickname(String nickname) {
+        this.nickname = nickname;
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    public void modifyPassword(String encode) {
+        this.password = encode;
+        this.modifyAt = LocalDateTime.now();
+    }
 }

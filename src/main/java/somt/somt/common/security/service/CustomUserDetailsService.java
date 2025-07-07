@@ -38,11 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         CustomUserData customUserData = new CustomUserData(member.getId(), member.getUserName(), member.getRole(), member.getPassword(), member.getNickname());
 
 
-        System.out.println("권한 테스트");
-        System.out.println(customUserData.getRole());
-        System.out.println("권한 테스트");
-        System.out.println("권한 테스트");
-        System.out.println("권한 테스트");
+
 
         return new CustomUserDetails(customUserData);
     }

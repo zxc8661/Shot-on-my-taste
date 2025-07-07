@@ -35,7 +35,9 @@ public class ProductThumbnailService {
 
     @Transactional
     public void uploadImageFile(List<MultipartFile> imageFiles, Product product) {
-        if(imageFiles.isEmpty()){
+
+
+        if(imageFiles==null || imageFiles.isEmpty()  ){
             throw new CustomException(ErrorCode.IMAGE_FILE_EMPTY);
         }
         Path uploadDir = Paths.get(BASE_PATH + product.getId());
