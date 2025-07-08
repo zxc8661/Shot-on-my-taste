@@ -49,14 +49,12 @@ public class JWTFilter extends OncePerRequestFilter {
         noCertifiedUrls.add("/api/member/logout");
 
 
-        System.out.println("1");
         for (String noCertifiedUrl : noCertifiedUrls) {
             if (request.getServletPath().contains(noCertifiedUrl)) {
                 filterChain.doFilter(request, response);
                 return;
             }
         }
-        System.out.println("6");
         String accessToken = request.getHeader("access");
 
         String refreshToken = getRefreshToken(request.getCookies());
@@ -64,21 +62,18 @@ public class JWTFilter extends OncePerRequestFilter {
         if (refreshToken == null) {
             throw new CustomException(ErrorCode.TOKEN_NOT_EFFECTIVE);
         }
-        System.out.println("2 ");
 
         //토큰 존재 확인
         if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        System.out.println("3");
         // 토큰 만료 확인
             if(jwtUtil.isExpired(accessToken)){
                 throw new CustomException(ErrorCode.ACCESSTOKEN_IS_EXPIRED);
 
             }
 
-        System.out.println("4");
         // 토큰 종류 확인
         if (!jwtUtil.getCategory(accessToken).equals("access")) {
             throw new CustomException(ErrorCode.NOT_ACCESSTOKEN);
@@ -107,14 +102,11 @@ public class JWTFilter extends OncePerRequestFilter {
 //        CustomUserData customUserData = new CustomUserData(memberId, username, nickname, role, "tmp");
         CustomUserData customUserData = new CustomUserData(memberId,username,role,"tmp",nickname);
 
-        System.out.println("customUserDate role : "+customUserData.getRole());
 
-        System.out.println("6");
 
         CustomUserDetails customUserDetails = new CustomUserDetails(customUserData);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        System.out.println("7");
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 

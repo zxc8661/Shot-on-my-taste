@@ -72,6 +72,7 @@ public class ProductService {
 
     @Transactional
     public ProductDetailDTO create(ProductRequest productRequest, List<MultipartFile> imageFiles) {
+
         if(productRepository.existsByProductName(productRequest.getProductName())){
             throw new CustomException(ErrorCode.DUPLICATE_PRODUCTNAME);
         }

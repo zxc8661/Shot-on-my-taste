@@ -31,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         objectMapper.writeValue(response.getOutputStream(), Map.of(
                 "timestamp", LocalDateTime.now().toString(),
                 "status", 401,
-                "error", "Unauthorized2",
+                "error", "Unauthorized",
                 "message", authException.getMessage(),
                 "path", request.getRequestURI()
         ));

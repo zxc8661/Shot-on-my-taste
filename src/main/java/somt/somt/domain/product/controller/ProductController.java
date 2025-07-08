@@ -32,7 +32,7 @@ public class ProductController {
     @PostMapping("/admin/products")
     public ResponseEntity<?> create(
             @ModelAttribute @Valid ProductRequest dto,
-            @RequestParam(value = "imageFiles",required = false) List<MultipartFile> files
+            @RequestParam(value = "imageFiles") List<MultipartFile> files
     ) throws IOException {
 
         ProductDetailDTO productDetailDTO = productService.create(dto, files);
