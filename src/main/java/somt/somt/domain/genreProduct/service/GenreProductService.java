@@ -12,6 +12,7 @@ import somt.somt.domain.product.entity.Product;
 public class GenreProductService {
     private final GenreProductRepository genreProductRepository;
 
+
     public GenreProduct create(Genre genre, Product product){
         GenreProduct genreProduct = new GenreProduct(genre,product);
         genreProductRepository.save(genreProduct);

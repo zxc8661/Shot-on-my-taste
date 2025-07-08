@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import somt.somt.domain.comment.entity.Comment;
+import somt.somt.domain.genre.entity.Genre;
 import somt.somt.domain.genreProduct.entity.GenreProduct;
 import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
@@ -74,5 +75,11 @@ public class Product {
         this.price =price;
         this.stock =stock;
         this.modifyAt = LocalDateTime.now();
+    }
+
+    public void addGenreProduct(Genre genre){
+        GenreProduct genreProduct = new GenreProduct(genre,this);
+        this.genreProductList.add(genreProduct);
+        genre.getGenreProductList().add(genreProduct);
     }
 }

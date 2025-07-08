@@ -39,15 +39,22 @@ public class ProductService {
 
 
     public Map<String, Object> getProducts(int page, int size) {
+
         Pageable pageable = PageRequest.of(page,size);
         Page<Product> productPage = productRepository.findAll(pageable);
-        List<somt.somt.domain.product.dto.reponse.ProductDTO> productDTOS = productPage.stream()
+
+
+        List<ProductDTO> productDTOS = productPage.stream()
                 .map(p->{
                     List<String> genres = p.getGenreProductList().stream()
                             .map(gp->gp.getGenre().getName())
                             .collect(Collectors.toList());
 
-                   return new ProductDTO(p.getId(),p.getProductName(),p.getPrice(),p.getProductThumbnails().get(0).getImagePath(),genres);
+                   return new ProductDTO(p.getId()
+                           ,p.getProductName()
+                           ,p.getPrice()
+                           ,p.getProductThumbnails().get(0).getImagePath()
+                           ,genres);
                 })
                 .collect(Collectors.toList());
 
@@ -77,9 +84,17 @@ public class ProductService {
             throw new CustomException(ErrorCode.DUPLICATE_PRODUCTNAME);
         }
 
+
         Product product = Product.create(productRequest);
 
         Product saveProduct = productRepository.save(product);
+
+
+        for(String genre : productRequest.getGenres()){
+            Genre tmpGenre = genreService.getGere(genre);
+            saveProduct.addGenreProduct(tmpGenre);
+        }
+
 
         productThumbnailService.uploadImageFile(imageFiles,saveProduct);
 

@@ -40,7 +40,7 @@ public class ProductController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true,productDetailDTO.getProductName() + "추가 성공",productDetailDTO.getId()));
+                .body(new CustomResponse<>(true,productDetailDTO.getProductName() + "추가 성공",productDetailDTO));
     }
 
 
@@ -53,7 +53,7 @@ public class ProductController {
         Map<String,Object> response =productService.getProducts(page,size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(new CustomResponse<>(true,"상품 목록 조회 성공",response));
     }
 
 
