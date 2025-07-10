@@ -25,4 +25,10 @@ public class OrderDetail {
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
 
+    public OrderDetail(Product product,Order order){
+        this.product = product;
+        this.order = order;
+        this.createAt  = LocalDateTime.now();
+    }
+
 }

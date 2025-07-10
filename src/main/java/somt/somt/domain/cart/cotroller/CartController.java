@@ -38,7 +38,7 @@ public class CartController {
             @AuthenticationPrincipal CustomUserDetails userDetails
             )
     {
-        List<CartResponse> cartList = cartService.getCarts(userDetails);
+        List<CartResponse> cartList = cartService.getCartResponse(userDetails);
 
         return ResponseEntity.status(HttpStatus.FOUND)
                 .body(new CustomResponse<>(true,"장바구니 목록 조회 성공",cartList));

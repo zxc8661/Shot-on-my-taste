@@ -26,8 +26,8 @@ public class CartService {
     private final ProductService productService;
     private final MemberService memberService;
 
-    public List<CartResponse> getCarts(CustomUserDetails userDetails) {
-        List<Cart> carts = cartRepository.findAllByMemberId(userDetails.getMemberId());
+    public List<CartResponse> getCartResponse(CustomUserDetails userDetails) {
+        List<Cart> carts = getCarts(userDetails.getMemberId());
 
         List<CartResponse> cartResponses = carts.stream()
                 .map(CartResponse::new)
@@ -83,6 +83,13 @@ public class CartService {
         cartRepository.deleteAllByMemberId(customUserDetails.getMemberId());
 
     }
+
+    public List<Cart> getCarts(Long memberId){
+       return cartRepository.findAllByMemberId(memberId);
+    }
+
+
+
 
     private void authorityCheck(Long memberId,Long cartMemberId){
         if(!Objects.equals(memberId, cartMemberId)){
