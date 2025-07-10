@@ -57,7 +57,7 @@ public class CartService {
 
 
     @Transactional
-    public void modifyCartAmount(CustomUserDetails userDetails, Long cartId, Integer amount) {
+    public Long modifyCartAmount(CustomUserDetails userDetails, Long cartId, Integer amount) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CART));
 
@@ -65,7 +65,7 @@ public class CartService {
 
         cart.amountModify(amount);
 
-
+        return cart.getId();
     }
 
     @Transactional

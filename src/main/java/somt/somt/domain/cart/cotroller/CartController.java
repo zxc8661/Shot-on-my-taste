@@ -51,8 +51,9 @@ public class CartController {
                                               @PathVariable(name = "cartId") Long cartId,
                                               @RequestParam(name = "amount") Integer amount){
 
-        cartService.modifyCartAmount(userDetails,cartId,amount);
-        return ResponseEntity.status(HttpStatus.OK).body("수량 변경 성공");
+        Long response = cartService.modifyCartAmount(userDetails,cartId,amount);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,response+"상품 수정 성공", response));
     }
 
     @DeleteMapping("/user/cart/{cartId}")
