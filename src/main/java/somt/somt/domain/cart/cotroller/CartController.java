@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.cart.dto.CartRequest;
 import somt.somt.domain.cart.dto.CartResponse;
@@ -22,6 +23,16 @@ public class CartController {
 
     private final CartService cartService;
 
+    @PostMapping("/user/cart")
+    public ResponseEntity<?> createCart(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                        @RequestBody @Valid CartRequest cartRequest){
+
+        Long cartId =cartService.create(userDetails,cartRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new CustomResponse<>(true,"장바구니 생성 성공",cartId));
+    }
+
     @GetMapping("/user/cart")
     public ResponseEntity<?> getCart(
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -29,16 +40,11 @@ public class CartController {
     {
         List<CartResponse> cartList = cartService.getCarts(userDetails);
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(cartList);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(new CustomResponse<>(true,"장바구니 목록 조회 성공",cartList));
     }
 
-    @PostMapping("/user/cart")
-    public ResponseEntity<?> createCart(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                        @RequestBody @Valid CartRequest cartRequest){
 
-        cartService.create(userDetails,cartRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("cart 생성 성공");
-    }
 
     @PutMapping("/user/cart/{cartId}")
     public ResponseEntity<?> modifyCartAmount(@AuthenticationPrincipal CustomUserDetails userDetails,
@@ -49,11 +55,18 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body("수량 변경 성공");
     }
 
-    @DeleteMapping("/user/{cartId}")
+    @DeleteMapping("/user/cart/{cartId}")
     public ResponseEntity<?> deleteCart(@AuthenticationPrincipal CustomUserDetails userDetails,
                                         @PathVariable(name = "cartId")Long cartId){
         cartService.deleteCart(userDetails,cartId);
-        return ResponseEntity.status(HttpStatus.OK).body("cart 삭제 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,cartId +" 상품삭제 성공",null));
+    }
+
+    @DeleteMapping("/user/cart/deleteAll")
+    public ResponseEntity<?> deleteAllCart(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        cartService.deleteAll(customUserDetails);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,"카트 삭제 성공",null));
     }
 
 }

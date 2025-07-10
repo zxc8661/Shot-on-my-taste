@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
@@ -29,32 +30,26 @@ public class JWTFilter extends OncePerRequestFilter {
     final private JWTUtil jwtUtil;
     final private RedisRepository redisRepository;
 
-    /**
-     * Jwt를 검증 및 CustomUserDetails 저장하는 메소드
-     *
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws ServletException
-     * @throws IOException
-     * @author 이광석
-     * @since 2025-03-26
-     */
+    private static final List<String> WHITELIST = List.of(
+            "/api/member/login",
+            "/api/member/register",
+            "/api/member/logout",
+            "/api/public"
+    );
+
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return WHITELIST.stream()
+                .anyMatch(path::startsWith);
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        List<String> noCertifiedUrls = new ArrayList<>();
-        noCertifiedUrls.add("/api/member/login");
-        noCertifiedUrls.add("/api/member/register");
-        noCertifiedUrls.add("/api/member/logout");
 
-
-        for (String noCertifiedUrl : noCertifiedUrls) {
-            if (request.getServletPath().contains(noCertifiedUrl)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-        }
         String accessToken = request.getHeader("access");
 
         String refreshToken = getRefreshToken(request.getCookies());
@@ -86,7 +81,6 @@ public class JWTFilter extends OncePerRequestFilter {
             redisRepository.delete(refreshToken);
             throw new CustomException(ErrorCode.TOKEN_MISMATCH);
         }
-        System.out.println("5");
 
         String username = jwtUtil.getUsername(accessToken);
         Long memberId = jwtUtil.getMemberId(accessToken);

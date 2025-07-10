@@ -36,13 +36,23 @@ public class CartService {
     }
 
     @Transactional
-    public void create(CustomUserDetails userDetails, CartRequest cartRequest) {
+    public Long create(CustomUserDetails userDetails, CartRequest cartRequest) {
         Member member = memberService.getMember(userDetails.getMemberId());
         Product product = productService.getProduct(cartRequest.getProductId());
 
-        Cart cart = new Cart(member,product,cartRequest.getAmount());
+        Cart cart;
 
-        cartRepository.save(cart);
+        if(cartRepository.existsByMemberIdAndProductId(member.getId(),product.getId()))
+        {
+            cart = cartRepository.findByMemberIdAndProductId(member.getId(),product.getId());
+            cart.amountModify(cart.getAmount()+cartRequest.getAmount());
+        }else{
+            Cart newCart = new Cart(member,product,cartRequest.getAmount());
+            cart = cartRepository.save(newCart);
+        }
+
+        cart =cartRepository.save(cart);
+        return cart.getId();
     }
 
 
@@ -68,6 +78,11 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
+    @Transactional
+    public void deleteAll(CustomUserDetails customUserDetails) {
+        cartRepository.deleteAllByMemberId(customUserDetails.getMemberId());
+
+    }
 
     private void authorityCheck(Long memberId,Long cartMemberId){
         if(!Objects.equals(memberId, cartMemberId)){
@@ -75,4 +90,7 @@ public class CartService {
         }
 
     }
+
+
+
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import somt.somt.common.exception.CustomException;
@@ -13,7 +14,6 @@ import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.image.ImageHandler;
 import somt.somt.domain.genre.entity.Genre;
 import somt.somt.domain.genre.service.GenreService;
-import somt.somt.domain.genreProduct.entity.GenreProduct;
 import somt.somt.domain.genreProduct.service.GenreProductService;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
 import somt.somt.domain.product.dto.request.ProductRequest;
@@ -38,10 +38,18 @@ public class ProductService {
 
 
 
-    public Map<String, Object> getProducts(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page,size);
-        Page<Product> productPage = productRepository.findAll(pageable);
+    public Map<String, Object> getProductSearch(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size,Sort.by("createAt").descending());
+
+        Page<Product> productPage ;
+
+        if(keyword.isEmpty()){
+           productPage    = productRepository.findAll(pageable);
+        }else{
+            productPage = productRepository.searchByKeyword(keyword,pageable);
+        }
+
 
 
         List<ProductDTO> productDTOS = productPage.stream()
@@ -49,12 +57,15 @@ public class ProductService {
                     List<String> genres = p.getGenreProductList().stream()
                             .map(gp->gp.getGenre().getName())
                             .collect(Collectors.toList());
+                    String thumbnailUrl = p.getProductThumbnails().isEmpty()
+                            ? null
+                            : p.getProductThumbnails().get(0).getImagePath();
 
-                   return new ProductDTO(p.getId()
-                           ,p.getProductName()
-                           ,p.getPrice()
-                           ,p.getProductThumbnails().get(0).getImagePath()
-                           ,genres);
+                    return new ProductDTO(p.getId()
+                            ,p.getProductName()
+                            ,p.getPrice()
+                            ,thumbnailUrl
+                            ,genres);
                 })
                 .collect(Collectors.toList());
 
@@ -65,7 +76,6 @@ public class ProductService {
         pageData.put("currentPage",productPage.getNumber());
 
         return pageData;
-
     }
 
     public ProductDetailDTO getProductDetails(Long productId) {
@@ -102,10 +112,19 @@ public class ProductService {
     }
 
     @Transactional
-    public void modify(ProductRequest productRequest, Long id, List<MultipartFile> imageFiles) {
+    public Long modify(ProductRequest productRequest, Long id, List<MultipartFile> imageFiles) {
 
         Product product = productRepository.findById(id)
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        product.getGenreProductList().clear();
+        product.getProductThumbnails().clear();
+
+        for (String strGenre : productRequest.getGenres()) {
+            Genre genre = genreService.getGere(strGenre);
+
+            product.addGenreProduct(genre);
+        }
 
         product.modifyBasicInfo(
                 productRequest.getProductName(),
@@ -114,10 +133,10 @@ public class ProductService {
                 productRequest.getStock()
         );
 
-        productThumbnailService.modifyImageFile(imageFiles,product);
+        productThumbnailService.modifyImageFile(imageFiles, product);
+
+        return product.getId();
     }
-
-
     private List<String> setFilePath(List<MultipartFile> imageFiles){
         List<String> filePaths=new ArrayList<>();
 
@@ -136,15 +155,6 @@ public class ProductService {
         return filePaths;
     }
 
-    private void setGenreProduct(List<String> genres, Product product){
-        for(String genreName : genres){
-            Genre genre = genreService.getGere(genreName);
-            GenreProduct genreProduct = genreProductService.create(genre,product);
-
-            genre.getGenreProductList().add(genreProduct);
-            product.getGenreProductList().add(genreProduct);
-        }
-    }
 
     public void delete(Long id) {
         Product product =productRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
@@ -156,4 +166,8 @@ public class ProductService {
         return productRepository.findById(productId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
     }
+
+
+
+
 }

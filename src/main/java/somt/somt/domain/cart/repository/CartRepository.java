@@ -10,4 +10,10 @@ import java.util.List;
 @Repository
 public interface CartRepository extends JpaRepository<Cart,Long> {
     List<Cart> findAllByMemberId(Long memberId);
+
+    boolean existsByMemberIdAndProductId(Long memberId, Long productId);
+
+    Cart findByMemberIdAndProductId(Long memberId,Long productId);
+
+    void deleteAllByMemberId(Long memberId);
 }

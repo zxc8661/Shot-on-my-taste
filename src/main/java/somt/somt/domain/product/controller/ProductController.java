@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.product.dto.reponse.ProductDTO;
 import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.service.ProductService;
@@ -44,17 +45,6 @@ public class ProductController {
     }
 
 
-    @GetMapping("/public/products")
-    public ResponseEntity<?> getProducts(
-            @RequestParam(name = "page",defaultValue = "0") int page,
-            @RequestParam(name = "size",defaultValue = "30") int size){
-
-
-        Map<String,Object> response =productService.getProducts(page,size);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"상품 목록 조회 성공",response));
-    }
 
 
     @GetMapping("/public/products/{productId}")
@@ -65,23 +55,35 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
 
+    @GetMapping("/public/products/search")
+    public ResponseEntity<?> gerProductSearch(
+            @RequestParam(name = "keyword",defaultValue = "") String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "30") int size
+    ){
+        Map<String,Object> response = productService.getProductSearch(keyword,page,size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,"삼품 검색 성공", response));
+    }
+
 
 
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<?> modify(
-            @RequestBody @Valid ProductRequest productModify,
+            @ModelAttribute @Valid ProductRequest productRequest,
             @PathVariable(name = "productId") Long id,
-            @RequestPart List<MultipartFile> imageFiles
+            @RequestParam(name = "imageFiles") List<MultipartFile> imageFiles
     ){
-        productService.modify(productModify,id,imageFiles);
+       Long productId= productService.modify(productRequest,id,imageFiles);
 
-        return ResponseEntity.status(HttpStatus.OK).body("상품 수정 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 수정 성공 ", productId));
     }
 
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<?> delete(@PathVariable(name = "productId") Long id){
         productService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("상품 삭제 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 삭제 완료",""));
     }
 
 }

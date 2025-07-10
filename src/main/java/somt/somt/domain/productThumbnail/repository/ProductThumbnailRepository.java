@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 
 @Repository
-public interface ProductThumbnailtRepository extends JpaRepository<ProductThumbnail,Long> {
+public interface ProductThumbnailRepository extends JpaRepository<ProductThumbnail,Long> {
 }

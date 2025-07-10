@@ -11,7 +11,7 @@ import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
-import somt.somt.domain.productThumbnail.repository.ProductThumbnailtRepository;
+import somt.somt.domain.productThumbnail.repository.ProductThumbnailRepository;
 
 import java.io.File;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductThumbnailService {
 
-    private final ProductThumbnailtRepository productThumbnailtRepository;
+    private final ProductThumbnailRepository productThumbnailRepository;
 
     @Value("${spring.upload.image}")
      private String BASE_PATH;
@@ -53,6 +53,9 @@ public class ProductThumbnailService {
         if(imageFiles.isEmpty()){
             return;
         }
+
+
+
         Path uploadDir = Paths.get(BASE_PATH + product.getId());
         File dir = uploadDir.toFile();
         if (dir.exists()) {
@@ -103,7 +106,7 @@ public class ProductThumbnailService {
                 throw  new CustomException(ErrorCode.IMAGE_FILE_SAVE_FAIL);
             }
 
-            productThumbnailtRepository.save(ProductThumbnail.builder()
+            productThumbnailRepository.save(ProductThumbnail.builder()
                     .product(product)
                     .imagePath(uploadDir.toString())
                     .createAt(LocalDateTime.now())

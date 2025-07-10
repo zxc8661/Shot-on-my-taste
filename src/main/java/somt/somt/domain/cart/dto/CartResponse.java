@@ -35,7 +35,8 @@ public class CartResponse {
                 product.getPrice(),
                 product.getProductThumbnails().stream()
                         .map(ProductThumbnail::getImagePath)
-                        .toList().get(0),
+                        .findFirst()
+                                .orElse(null),
                 product.getGenreProductList().stream()
                         .map(gp->gp.getGenre().getName())
                         .collect(Collectors.toList())
