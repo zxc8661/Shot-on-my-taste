@@ -1,7 +1,9 @@
 package somt.somt.domain.order.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import somt.somt.domain.product.entity.Product;
 
 import java.time.LocalDateTime;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "order_detail")
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +29,14 @@ public class OrderDetail {
     @Column(name = "create_at",nullable = false)
     private LocalDateTime createAt;
 
-    public OrderDetail(Product product,Order order){
+    @Column(nullable = false)
+    private Integer amount;
+
+    public OrderDetail(Product product,Order order,Integer amount){
         this.product = product;
         this.order = order;
         this.createAt  = LocalDateTime.now();
+        this.amount = amount;
     }
 
 }

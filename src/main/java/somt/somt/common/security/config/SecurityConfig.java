@@ -44,7 +44,7 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity // @PreAuthorize를 사용하기위함
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
