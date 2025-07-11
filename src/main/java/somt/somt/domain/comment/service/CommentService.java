@@ -43,7 +43,7 @@ public class CommentService {
             comment = new Comment(member, product, commentRequest.getContent(), commentRequest.getGrade(),commentRequest.getParentId());
         }
         commentRepository.save(comment);
-        return null;
+        return comment.getId();
     }
 
     public Map<String, Object> getCommentList(Long productId, int page, int size) {

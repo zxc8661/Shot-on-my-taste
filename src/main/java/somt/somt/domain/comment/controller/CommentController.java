@@ -29,7 +29,7 @@ public class CommentController {
         Long id = commentService.create(customUserDetails,commentRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true, "댓글 생성 성공" , "memberId",id));
+                .body(new CustomResponse<>(true, "댓글 생성 성공" , "commentId",id));
     }
 
     @GetMapping("/public/comments/{productId}")
@@ -38,14 +38,15 @@ public class CommentController {
                                             @RequestParam(name = "size",defaultValue = "10") int size){
         Map<String,Object> response = commentService.getCommentList(productId,page,size);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,"댓글 조회 성공","commentData",response));
     }
 
-    @GetMapping("/user/comments/{commentId}/replies")
-    public ResponseEntity<?> getSonCommentList(@PathVariable(name = "commentId") Long commentId){
-        List<CommentResponse> response = commentService.getSonCommentList(commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @GetMapping("/user/comments/{commentId}/replies")
+//    public ResponseEntity<?> getSonCommentList(@PathVariable(name = "commentId") Long commentId){
+//        List<CommentResponse> response = commentService.getSonCommentList(commentId);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
 
     @PutMapping("/user/comments/{commentId}")
