@@ -35,6 +35,6 @@ public class MemberHistoryController {
             @RequestParam(name = "memberId", required = false) Long memberId){
         Map<String,Object> response = memberHistoryService.getHistory(page,size,memberId);
 
-        return ResponseEntity.ok(new CustomResponse<>(true,"멤버 히스토리 요청 성공",response));
+        return ResponseEntity.ok(new CustomResponse<>(true,"멤버 히스토리 요청 성공","historyData",response));
     }
 }

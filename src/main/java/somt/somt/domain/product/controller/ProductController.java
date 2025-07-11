@@ -41,7 +41,7 @@ public class ProductController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true,productDetailDTO.getProductName() + "추가 성공",productDetailDTO));
+                .body(new CustomResponse<>(true,productDetailDTO.getProductName() + "추가 성공","productData",productDetailDTO));
     }
 
 
@@ -64,7 +64,7 @@ public class ProductController {
         Map<String,Object> response = productService.getProductSearch(keyword,page,size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"삼품 검색 성공", response));
+                .body(new CustomResponse<>(true,"삼품 검색 성공", "productList",response));
     }
 
 
@@ -77,13 +77,13 @@ public class ProductController {
     ){
        Long productId= productService.modify(productRequest,id,imageFiles);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 수정 성공 ", productId));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 수정 성공 ","productId", productId));
     }
 
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<?> delete(@PathVariable(name = "productId") Long id){
         productService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 삭제 완료",""));
+        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 삭제 완료","Not data",null));
     }
 
 }

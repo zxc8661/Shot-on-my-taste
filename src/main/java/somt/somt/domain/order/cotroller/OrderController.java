@@ -28,7 +28,7 @@ public class OrderController {
         Long response = orderService.create(customUserDetails);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true,"주문 생성 성공",response));
+                .body(new CustomResponse<>(true,"주문 생성 성공","orderId",response));
     }
 
     @GetMapping("/user/orders")
@@ -39,7 +39,7 @@ public class OrderController {
     ){
         Map<String,Object> response = orderService.getOrders(customUserDetails,page,size);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"주문 목록 조회 성공",response));
+                .body(new CustomResponse<>(true,"주문 목록 조회 성공","orderList",response));
 
     }
 
@@ -50,7 +50,7 @@ public class OrderController {
     ){
         Map<String,Object> response = orderService.getAllOrders(page,size);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"주문 목록 조회 성공",response));
+                .body(new CustomResponse<>(true,"주문 목록 조회 성공","orderList",response));
 
     }
 }

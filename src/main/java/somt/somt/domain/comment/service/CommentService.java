@@ -31,7 +31,7 @@ public class CommentService {
     private final MemberService memberService;
 
     @Transactional
-    public void create(CustomUserDetails customUserDetails, CommentRequest commentRequest) {
+    public Long create(CustomUserDetails customUserDetails, CommentRequest commentRequest) {
         Product product = productService.getProduct(commentRequest.getProductId());
         Member member = memberService.getMember(customUserDetails.getMemberId());
 
@@ -43,6 +43,7 @@ public class CommentService {
             comment = new Comment(member, product, commentRequest.getContent(), commentRequest.getGrade(),commentRequest.getParentId());
         }
         commentRepository.save(comment);
+        return null;
     }
 
     public Map<String, Object> getCommentList(Long productId, int page, int size) {

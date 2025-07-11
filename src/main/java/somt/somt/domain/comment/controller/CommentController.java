@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.comment.dto.CommentResponse;
@@ -25,9 +26,10 @@ public class CommentController {
     @PostMapping("/user/comment")
     public ResponseEntity<?> createComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentRequest commentRequest) {
-        commentService.create(customUserDetails,commentRequest);
+        Long id = commentService.create(customUserDetails,commentRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("comment 생성 성공");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CustomResponse<>(true, "댓글 생성 성공" , "memberId",id));
     }
 
     @GetMapping("/public/comments/{productId}")
