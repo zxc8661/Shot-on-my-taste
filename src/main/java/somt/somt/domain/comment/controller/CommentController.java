@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.comment.dto.CommentModifyRequest;
 import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.comment.dto.CommentResponse;
 import somt.somt.domain.comment.service.CommentService;
@@ -51,10 +52,11 @@ public class CommentController {
 
     @PutMapping("/user/comments/{commentId}")
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                           @RequestBody @Valid CommentRequest commentRequest,
+                                           @RequestBody @Valid CommentModifyRequest commentModifyRequest,
                                            @PathVariable(name = "commentId") Long commentId) {
-        commentService.modify(customUserDetails,commentRequest,commentId);
-        return ResponseEntity.status(HttpStatus.OK).body("comment 수정 성공");
+        Long commentId2 =commentService.modify(customUserDetails,commentModifyRequest,commentId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,"댓글 수정 성공","commentId",commentId2));
     }
 
 
@@ -62,6 +64,6 @@ public class CommentController {
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);
-        return ResponseEntity.status(HttpStatus.OK).body("comment 삭제 성공");
-    }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CustomResponse<>(true,"댓글 수정 성공","Not data",null));    }
 }

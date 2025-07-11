@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import somt.somt.domain.comment.dto.CommentModifyRequest;
 import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.product.entity.Product;
@@ -70,7 +71,7 @@ public class Comment {
         this.modifyAt = LocalDateTime.now();
     }
 
-    public void modify(CommentRequest commentRequest) {
+    public void modify(CommentModifyRequest commentRequest) {
         this.content= commentRequest.getContent();
         this.grade = commentRequest.getGrade();
         this.modifyAt  = LocalDateTime.now();

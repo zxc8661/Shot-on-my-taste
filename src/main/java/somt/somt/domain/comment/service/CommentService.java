@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.comment.dto.CommentModifyRequest;
 import somt.somt.domain.comment.dto.CommentRequest;
 import somt.somt.domain.comment.dto.CommentResponse;
 import somt.somt.domain.comment.entity.Comment;
@@ -79,7 +80,7 @@ public class CommentService {
 
 
     @Transactional
-    public void modify(CustomUserDetails customUserDetails, CommentRequest commentRequest, Long commentId) {
+    public Long modify(CustomUserDetails customUserDetails, CommentModifyRequest commentModifyRequest, Long commentId) {
         Comment comment  = commentRepository.findById(commentId)
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_COMMENT));
 
@@ -87,7 +88,8 @@ public class CommentService {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
 
-        comment.modify(commentRequest);
+        comment.modify(commentModifyRequest);
+        return comment.getId();
     }
 
 
