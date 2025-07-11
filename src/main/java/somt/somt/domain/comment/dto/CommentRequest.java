@@ -19,7 +19,6 @@ public class CommentRequest {
     @NotBlank
     private String content;
 
-    @NotNull
     @Min(1)
     @Max(5)
     private Integer grade;

@@ -51,20 +51,23 @@ public class CommentService {
 
         Page<Comment> pages = commentRepository.findByProductIdAndParentIdIsNull(productId,pageable);
 
-        List<CommentResponse> list = pages.stream()
-                .map(c->{
-                    return new CommentResponse(
-                            c.getId(),
-                            c.getMember().getId(),
-                            c.getMember().getNickname(),
-                            c.getContent(),
-                            c.getModifyAt()
-                    );
+        List<CommentResponse> commentResponseList = pages.getContent().stream()
+                .map(comment -> {
+                    if(commentRepository.existsById(comment.getId())){
+                        List<Comment> tmp = commentRepository.findByParentId(comment.getId());
+                        List<CommentResponse> tmp2 = tmp.stream()
+                                .map(CommentResponse::new)
+                                .toList();
+                        return new CommentResponse(comment,tmp2);
+                    }else{
+                        return new CommentResponse(comment);
+                    }
                 })
                 .toList();
 
+
         Map<String,Object> response = new HashMap<>();
-        response.put("content",list);
+        response.put("content",commentResponseList);
         response.put("totalPageCount",pages.getTotalPages());
         response.put("totalElementCount",pages.getTotalElements());
         response.put("currentPage",pages.getNumber());
@@ -73,19 +76,7 @@ public class CommentService {
         return response;
     }
 
-    public List<CommentResponse> getSonCommentList(Long commentId) {
-        return commentRepository.findByParentId(commentId)
-                .stream()
-                .map(p->new CommentResponse(
-                        p.getId(),
-                        p.getMember().getId(),
-                        p.getMember().getNickname(),                        p.getContent(),
-                        p.getModifyAt()
-                        ))
-                .toList();
 
-
-    }
 
     @Transactional
     public void modify(CustomUserDetails customUserDetails, CommentRequest commentRequest, Long commentId) {
