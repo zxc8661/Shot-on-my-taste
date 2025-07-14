@@ -42,8 +42,9 @@ public class JWTFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
+
         return WHITELIST.stream()
-                .anyMatch(path::startsWith);
+                .anyMatch(path:: startsWith);
     }
 
     @Override

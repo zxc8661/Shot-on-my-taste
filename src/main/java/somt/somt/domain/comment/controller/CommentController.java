@@ -24,7 +24,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/user/comment")
+    @PostMapping("/user/comments")
     public ResponseEntity<?> createComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentRequest commentRequest) {
         Long id = commentService.create(customUserDetails,commentRequest);
@@ -61,9 +61,9 @@ public class CommentController {
 
 
     @DeleteMapping("/user/comments/{commentId}")
-    public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+    public ResponseEntity<?> deleteComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"댓글 수정 성공","Not data",null));    }
+                .body(new CustomResponse<>(true,"댓글 삭제 성공","Not data",null));    }
 }
