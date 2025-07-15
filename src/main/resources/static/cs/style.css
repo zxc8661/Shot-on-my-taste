@@ -1,0 +1,7 @@
+body {
+    padding-top: 60px;
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
