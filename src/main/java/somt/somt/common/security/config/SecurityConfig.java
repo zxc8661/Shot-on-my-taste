@@ -87,6 +87,7 @@ public class SecurityConfig {
 
                 .httpBasic((auth) -> auth.disable())
 
+                .securityMatcher("/api/**")
                 .authorizeHttpRequests((auth) -> auth
 
                         .requestMatchers("/api/member/login", "/api/member/register", "/api/member/logout","/","/error").permitAll()  // 누구나 접근 가능
@@ -94,6 +95,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")  // USER or ADMIN 권한 필요
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")  // ADMIN 권한 필요
                         .anyRequest().authenticated() // 인증 필요
+
+
                 )
                 .headers(headers -> headers
                         .defaultsDisabled()
