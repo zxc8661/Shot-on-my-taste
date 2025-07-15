@@ -30,21 +30,27 @@ public class JWTFilter extends OncePerRequestFilter {
     final private JWTUtil jwtUtil;
     final private RedisRepository redisRepository;
 
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     private static final List<String> WHITELIST = List.of(
+            "/",
+            "/error",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/favicon.ico",
             "/api/member/login",
             "/api/member/register",
             "/api/member/logout",
-            "/api/public"
+            "/api/public/**"
     );
 
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-
-
         return WHITELIST.stream()
-                .anyMatch(path:: startsWith);
+                .anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
 
     @Override

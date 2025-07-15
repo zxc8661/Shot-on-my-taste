@@ -8,6 +8,7 @@ import somt.somt.domain.genre.entity.Genre;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProductDetailDTO {
     private List<String> images= new ArrayList<>();
     private String content;
     private List<String> genres=new ArrayList<>();
+    private BigDecimal price;
     private LocalDateTime createAt;
     private LocalDateTime modifyAt;
 
@@ -39,6 +41,7 @@ public class ProductDetailDTO {
                     Genre genre = genreProduct.getGenre();
                     return genre.getName();})
                 .toList();
+        productDetailDTO.price=product.getPrice();
         productDetailDTO.content = product.getContent();
         productDetailDTO.createAt = product.getCreateAt();
         productDetailDTO.modifyAt = product.getModifyAt();
