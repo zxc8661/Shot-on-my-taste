@@ -32,7 +32,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ImageHandler imageHandler;
     private final GenreService genreService;
-    private final GenreProductService genreProductService;
     private final ProductThumbnailService productThumbnailService;
 
 
@@ -137,23 +136,23 @@ public class ProductService {
 
         return product.getId();
     }
-    private List<String> setFilePath(List<MultipartFile> imageFiles){
-        List<String> filePaths=new ArrayList<>();
-
-        try {
-            for (MultipartFile image : imageFiles) {
-                if (!image.isEmpty()) {
-                    String filePath = imageHandler.saveImage(image);
-                    filePaths.add(filePath);
-                }
-            }
-
-        }catch(IOException e){
-            throw new CustomException(ErrorCode.BAD_FILEPATH);
-        }
-
-        return filePaths;
-    }
+//    private List<String> setFilePath(List<MultipartFile> imageFiles){
+//        List<String> filePaths=new ArrayList<>();
+//
+//        try {
+//            for (MultipartFile image : imageFiles) {
+//                if (!image.isEmpty()) {
+//                    String filePath = imageHandler.saveImage(image);
+//                    filePaths.add(filePath);
+//                }
+//            }
+//
+//        }catch(IOException e){
+//            throw new CustomException(ErrorCode.BAD_FILEPATH);
+//        }
+//
+//        return filePaths;
+//    }
 
 
     public void delete(Long id) {
