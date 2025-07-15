@@ -91,7 +91,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
 
                         .requestMatchers(
-                                "/", "/error", "/css/**", "/js/**", "/images/**", "/favicon.ico",
                                 "/api/member/login", "/api/member/register", "/api/member/logout", "/api/public/**"
                         ).permitAll()
                         .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")  // USER or ADMIN 권한 필요
