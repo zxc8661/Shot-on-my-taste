@@ -7,10 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.domain.genre.entity.Genre;
+import somt.somt.domain.genre.service.GenreService;
 import somt.somt.domain.genreProduct.entity.GenreProduct;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
@@ -18,8 +20,10 @@ import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.product.repository.ProductRepository;
 import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
+import somt.somt.domain.productThumbnail.service.ProductThumbnailService;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -37,6 +42,11 @@ class ProductServiceTest {
 
 
     @InjectMocks private ProductService productService;
+
+    @Mock
+    ProductThumbnailService productThumbnailService;
+    @Mock
+    GenreService genreService;
 
     Product testProduct;
 
@@ -129,7 +139,24 @@ class ProductServiceTest {
         //given
         List<MultipartFile> imageFiles = Collections.emptyList();
         List<String> genres = Collections.emptyList();
-        ProductRequest productRequest = new ProductRequest("아크",new BigDecimal(2000),10,"잼남",genres);
+        ProductRequest productRequest = new ProductRequest("아크",new BigDecimal(2000),10,"잼남",List.of("RPG"));
+        when(productRepository.existsByProductName(anyString())).thenReturn(false);
+
+        Product saved = Product.create(productRequest);
+
+        /**
+         * ReflectionTestUtils
+         * Spring Test 라이프러리에서 제공하는 유틸 클래스
+         * 테스트 코드에서 private, protected 필드에 값을 주입할때 사용
+         */
+        ReflectionTestUtils.setField(saved,"id",42L);
+        ReflectionTestUtils.setField(saved,"createAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(saved,"modifyAt",LocalDateTime.now());
+        when(productRepository.save(any())).thenReturn(saved);
+
+
+        Genre genre = new Genre(1L,"RPG");
+        when(genreService.getGere("RPG")).thenReturn(genre);
 
 
 
@@ -138,7 +165,33 @@ class ProductServiceTest {
 
 
         //then
+        assertThat(testDto.getPrice()).isEqualTo("2000");
+        assertThat(testDto.getProductName()).isEqualTo("아크");
+        assertThat(testDto.getGenres().get(0)).isEqualTo("RPG");
 
+    }
+
+    @Test
+    void create_existsByProductName(){
+        //given
+        ProductRequest testProductRequest = new ProductRequest(
+                "아크",
+                new BigDecimal("2000"),
+                10,
+                "잼남",
+                Collections.emptyList()
+        );
+
+        when(productRepository.existsByProductName(anyString())).thenReturn(true);
+
+        //when
+        CustomException ex = assertThrows(
+                CustomException.class,
+                ()->productService.create(testProductRequest,Collections.emptyList())
+        );
+
+        //then
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.DUPLICATE_PRODUCTNAME);
     }
 
 
@@ -146,8 +199,46 @@ class ProductServiceTest {
     @Test
     void modify(){
         //given
+        ProductRequest mockProductRequest =
+                new ProductRequest(
+                        "아크",
+                        new BigDecimal("2000"),
+                        10,
+                        "잼남",
+                        List.of("RPG"));
+        List<MultipartFile> mockImages = Collections.emptyList();
+
+        Product mockProduct =
+                new Product(
+                        1L,
+                        "아크2",
+                        new BigDecimal("2002"),
+                        12,
+                        "잼없음"
+                );
+
+        when(productRepository.findById(any())).thenReturn(Optional.of(mockProduct));
+
+        Genre mockGenre = new Genre(1L,"RPG");
+
+        when(genreService.getGere("RPG")).thenReturn(mockGenre);
+        /*
+
+         */
+        doNothing().when(productThumbnailService).modifyImageFile(anyList(),any(Product.class));
+
         //when
+        Long id = productService.modify(mockProductRequest,1L,mockImages);
+
         //then
+
+        assertThat(id).isEqualTo(1L);
+        assertThat(mockProduct.getGenreProductList().size()).isEqualTo(1);
+        assertThat(mockProduct.getProductName()).isEqualTo("아크");
+
+        verify(productRepository).findById(1L);
+        verify(genreService).getGere("RPG");
+
     }
 
     @Test
