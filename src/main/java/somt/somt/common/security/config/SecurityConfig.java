@@ -35,12 +35,6 @@ import somt.somt.domain.member.service.MemberHistoryService;
 import java.io.IOException;
 
 
-/**
- * 시큐리티 설정
- *
- * @since 2025-06-19
- * @author  이광석
- */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

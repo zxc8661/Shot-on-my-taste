@@ -39,3 +39,9 @@ out/
 
 ###aplication-secret###
 application-secret.yml
+
+
+###frontend_tset ###
+/src/main/resources/templates/some/css/
+/src/main/resources/templates/some/html/
+/src/main/resources/templates/some/js/
