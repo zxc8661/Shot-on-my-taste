@@ -1,6 +1,5 @@
 package somt.somt.domain.product.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
 import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.entity.Product;
 import somt.somt.domain.product.repository.ProductRepository;
-import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 import somt.somt.domain.productThumbnail.service.ProductThumbnailService;
 
 import java.math.BigDecimal;
@@ -36,12 +34,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceUnitTest {
 
-    @Mock private ProductRepository            productRepository;
+    @Mock
+    private ProductRepository productRepository;
 
-
-    @InjectMocks private ProductService productService;
+    @InjectMocks
+    private ProductService productService;
 
     @Mock
     ProductThumbnailService productThumbnailService;
@@ -113,10 +112,7 @@ class ProductServiceTest {
         assertThat(content.getProductName()).isEqualTo("로스트아크");
         assertThat(content.getPrice()).isEqualTo("1200");
 
-//        assertThatThrownBy(()-> productService.getProductDetails(42L))
-//                .isInstanceOf(CustomException.class)
-//                .extracting("errorCode")
-//                .isEqualTo(ErrorCode.NOT_FOUND_PRODUCT);
+
 
     }
 
@@ -241,19 +237,6 @@ class ProductServiceTest {
 
     }
 
-    @Test
-    void delete(){
-        //given
-        //when
-        //then
-    }
 
-
-    @Test
-    void getProduct(){
-        //given
-        //when
-        //then
-    }
 
 }
