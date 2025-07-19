@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import somt.somt.common.security.dto.CustomUserData;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.address.dto.AddressRequest;
@@ -13,8 +13,10 @@ import somt.somt.domain.address.entity.Address;
 import somt.somt.domain.address.repository.AddressRepository;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.service.MemberService;
+import somt.somt.domain.product.entity.Product;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -74,6 +76,15 @@ public class AddressServiceUnitTest {
                 );
         int page =0;
         int size =30;
+
+        Address address = new Address()
+
+        Page<Product> page = new PageImpl<>(
+                Collections.singletonList(mockProduct),
+                PageRequest.of(0,1, Sort.by("createAt").descending()),
+                1
+        );
+
 
         when(addressRepository.findAllByMemberId(anyLong(),any(Pageable.class))).thenReturn()
         //when
