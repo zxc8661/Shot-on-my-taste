@@ -5,24 +5,29 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import somt.somt.common.security.dto.CustomUserData;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.address.dto.AddressRequest;
+import somt.somt.domain.address.dto.AddressResponse;
 import somt.somt.domain.address.entity.Address;
 import somt.somt.domain.address.repository.AddressRepository;
 import somt.somt.domain.member.entity.Member;
 import somt.somt.domain.member.service.MemberService;
-import somt.somt.domain.product.entity.Product;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDateTime;
+
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 public class AddressServiceUnitTest {
 
@@ -77,39 +82,41 @@ public class AddressServiceUnitTest {
         int page =0;
         int size =30;
 
-        Address address = new Address()
+        Member mockMember = new Member();
 
-        Page<Product> page = new PageImpl<>(
-                Collections.singletonList(mockProduct),
-                PageRequest.of(0,1, Sort.by("createAt").descending()),
+        Address address = new Address(100L,mockMember,"천안");
+
+
+        Pageable pageable = PageRequest.of(page,size);
+
+        Page<Address> mockPage  = new PageImpl<>(
+                Collections.singletonList(address),
+                pageable,
                 1
         );
 
 
-        when(addressRepository.findAllByMemberId(anyLong(),any(Pageable.class))).thenReturn()
+
+        when(addressRepository.findAllByMemberId(anyLong(),any(Pageable.class))).thenReturn(mockPage);
         //when
+        Map<String,Object> mockResult = addressService.getAddress(mockCustomUserDetails,page,size);
+
         //then
+        /*
+        content 꺼내서 타입 캐스팅
+         */
+        @SuppressWarnings("unchecked")
+        List<AddressResponse> content  = (List<AddressResponse>) mockResult.get("content");
+
+        assertThat(content).hasSize(1);
+        assertThat(content.get(0).getId()).isEqualTo(100L);
+        assertThat(content.get(0).getAddress()).isEqualTo("천안");
+
+        assertThat(mockResult.get("totalPage")).isEqualTo(1);
+        assertThat(mockResult.get("totalElements")).isEqualTo(1L);
+        assertThat(mockResult.get("currentPage")).isEqualTo(0);
+
     }
 
-    @Test
-    void getAddressDetail(){
-        //given
-        //when
-        //then
-    }
 
-    @Test
-    void modify(){
-        //given
-        //when
-        //then
-    }
-
-
-    @Test
-    void delete(){
-        //given
-        //when
-        //then
-    }
 }
