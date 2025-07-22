@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class CartServiceUnitTest {
 
     @Mock
     CartRepository cartRepository;
