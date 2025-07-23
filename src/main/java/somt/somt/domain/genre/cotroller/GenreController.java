@@ -3,10 +3,12 @@ package somt.somt.domain.genre.cotroller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.genre.dto.GenreRequest;
 import somt.somt.domain.genre.dto.GenreResponse;
@@ -31,7 +33,9 @@ public class GenreController {
 
         genreService.create(genreRequest);
 
-        return ResponseEntity.ok("장르 추가 완료");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(CustomResponse.success("장르 추가 완료"));
     }
 
     @GetMapping("/public/genres")
@@ -40,7 +44,9 @@ public class GenreController {
         List<GenreResponse> responseList = genreService.getGenreList();
 
 
-        return ResponseEntity.ok(responseList);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success(responseList,"장르 조회 성공"));
     }
 
     @PutMapping("/admin/genres/{genreId}")
@@ -50,7 +56,9 @@ public class GenreController {
 
 
         genreService.modify(genreId,genreRequest);
-        return ResponseEntity.ok("장르가 수정되었습니다.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("장르 수정 성공"));
     }
 
     @DeleteMapping("/admin/genres/{genreId}")
@@ -60,6 +68,8 @@ public class GenreController {
 
 
         genreService.delete(genreId);
-        return ResponseEntity.ok("장르가 삭제되었습니다.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("장르 삭제 성공 "));
     }
 }

@@ -51,7 +51,7 @@ public class CartService {
             cart = cartRepository.save(newCart);
         }
 
-        cart =cartRepository.save(cart);
+//        cart =cartRepository.save(cart);
         return cart.getId();
     }
 

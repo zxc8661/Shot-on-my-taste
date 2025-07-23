@@ -82,4 +82,14 @@ public class Product {
         this.genreProductList.add(genreProduct);
         genre.getGenreProductList().add(genreProduct);
     }
+
+    public Product(Long id,String productName,BigDecimal price,int stock,String content){
+        this.id = id;
+        this.productName = productName;
+        this.price = price;
+        this.content = content;
+        this.stock = stock;
+        this.createAt = LocalDateTime.now();
+        this.modifyAt= LocalDateTime.now();
+    }
 }

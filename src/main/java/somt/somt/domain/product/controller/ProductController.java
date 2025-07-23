@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
@@ -38,10 +39,9 @@ public class ProductController {
 
         ProductDetailDTO productDetailDTO = productService.create(dto, files);
 
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true,productDetailDTO.getProductName() + "추가 성공","productData",productDetailDTO));
+                .body(CustomResponse.success(productDetailDTO,"상품 추가 성공 "));
     }
 
 
@@ -52,7 +52,9 @@ public class ProductController {
             @PathVariable(name = "productId") Long productId){
         ProductDetailDTO productDetailDTO = productService.getProductDetails(productId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success(productDetailDTO,"상품 상세 조회 성공 "));
     }
 
     @GetMapping("/public/products/search")
@@ -61,10 +63,11 @@ public class ProductController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "30") int size
     ){
-        Map<String,Object> response = productService.getProductSearch(keyword,page,size);
+        CustomPageResponse<ProductDTO> response = productService.getProductSearch(keyword,page,size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"삼품 검색 성공", "productList",response));
+                .body(CustomResponse.success(response,"삼품 검색 성공"));
+
     }
 
 
@@ -77,13 +80,17 @@ public class ProductController {
     ){
        Long productId= productService.modify(productRequest,id,imageFiles);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 수정 성공 ","productId", productId));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success(productId,"상품 수정 성공"));
     }
 
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<?> delete(@PathVariable(name = "productId") Long id){
         productService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"상품 삭제 완료","Not data",null));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("상품 삭제 성공 "));
     }
 
 }

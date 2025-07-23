@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.image.ImageHandler;
@@ -38,7 +39,7 @@ public class ProductService {
 
 
 
-    public Map<String, Object> getProductSearch(String keyword, int page, int size) {
+    public CustomPageResponse<ProductDTO> getProductSearch(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page,size,Sort.by("createAt").descending());
 
         Page<Product> productPage ;
@@ -48,8 +49,6 @@ public class ProductService {
         }else{
             productPage = productRepository.searchByKeyword(keyword,pageable);
         }
-
-
 
         List<ProductDTO> productDTOS = productPage.stream()
                 .map(p->{
@@ -68,13 +67,13 @@ public class ProductService {
                 })
                 .collect(Collectors.toList());
 
-        Map<String,Object> pageData = new HashMap<>();
-        pageData.put("content",productDTOS);
-        pageData.put("totalPageCount",productPage.getTotalPages());
-        pageData.put("totalElementCount",productPage.getTotalElements());
-        pageData.put("currentPage",productPage.getNumber());
 
-        return pageData;
+        return  CustomPageResponse.of(
+                productDTOS,
+                productPage.getTotalPages(),
+                productPage.getTotalElements(),
+                productPage.getNumber()
+        );
     }
 
     public ProductDetailDTO getProductDetails(Long productId) {
@@ -136,23 +135,6 @@ public class ProductService {
 
         return product.getId();
     }
-//    private List<String> setFilePath(List<MultipartFile> imageFiles){
-//        List<String> filePaths=new ArrayList<>();
-//
-//        try {
-//            for (MultipartFile image : imageFiles) {
-//                if (!image.isEmpty()) {
-//                    String filePath = imageHandler.saveImage(image);
-//                    filePaths.add(filePath);
-//                }
-//            }
-//
-//        }catch(IOException e){
-//            throw new CustomException(ErrorCode.BAD_FILEPATH);
-//        }
-//
-//        return filePaths;
-//    }
 
 
     public void delete(Long id) {

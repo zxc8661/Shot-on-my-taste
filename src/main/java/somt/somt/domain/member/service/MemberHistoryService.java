@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.domain.member.dto.MemberHistory.MemberHistoryDTO;
@@ -31,7 +32,7 @@ public class MemberHistoryService {
     private final MemberHistoryKeyValueRepository memberHistoryKeyValueRepository;
     private final MemberRepository memberRepository;
 
-    public Map<String, Object> getHistory(int page, int size, Long memberId) {
+    public CustomPageResponse<MemberHistoryDTO> getHistory(int page, int size, Long memberId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("happenTime").descending());
         Page<MemberHistory> historyPage;
         if (memberId == null) {
@@ -49,13 +50,14 @@ public class MemberHistoryService {
                         p.getHappenTime()))
                 .toList();
 
-        Map<String, Object> response = new HashMap<>();
 
-        response.put("content", historyList);
-        response.put("totalPage", historyPage.getTotalPages());
-        response.put("currentPage", historyPage.getNumber());
-        response.put("totalElements", historyPage.getTotalElements());
-        return response;
+        return CustomPageResponse.of(
+                historyList,
+                historyPage.getTotalPages(),
+                historyPage.getTotalElements(),
+                historyPage.getNumber()
+
+        );
     }
 
     @Transactional

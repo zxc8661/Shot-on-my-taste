@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.address.entity.Address;
 import somt.somt.domain.cart.entity.Cart;
 import somt.somt.domain.comment.entity.Comment;
@@ -104,6 +105,19 @@ public class Member {
 
     public void modifyPassword(String encode) {
         this.password = encode;
+        this.modifyAt = LocalDateTime.now();
+    }
+
+    // 단위 테스트용 생성자
+    public Member(CustomUserDetails customUserDetails){
+        this.id = customUserDetails.getMemberId();
+        this.userName = customUserDetails.getUsername();
+        this.password = customUserDetails.getPassword();
+        this.nickname = customUserDetails.getNickname();
+        this.email = " ";
+        this.role = customUserDetails.getRole();
+        this.isActive=true;
+        this.createAt = LocalDateTime.now();
         this.modifyAt = LocalDateTime.now();
     }
 }

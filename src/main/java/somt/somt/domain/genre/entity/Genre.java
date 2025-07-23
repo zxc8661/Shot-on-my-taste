@@ -48,11 +48,21 @@ public class Genre {
         genre.modifyAt=LocalDateTime.now();
         return genre;
     }
+
+
     public void modify(String newName){
 
         this.name = newName;
         this.modifyAt = LocalDateTime.now();
     }
 
+
+    // 단위 테스트 용 코드
+    public Genre(Long id, String name){
+        this.id=id;
+        this.name = name;
+        this.createAt=LocalDateTime.now();
+        this.modifyAt=LocalDateTime.now();
+    }
 
 }

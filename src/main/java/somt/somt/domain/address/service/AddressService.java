@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
@@ -38,7 +39,7 @@ public class AddressService {
         addressRepository.save(address);
     }
 
-    public Map<String, Object> getAddress(CustomUserDetails customUserDetails, Integer page, Integer size) {
+    public CustomPageResponse<AddressResponse> getAddress(CustomUserDetails customUserDetails, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page,size);
 
         Page<Address> newPage = addressRepository.findAllByMemberId(customUserDetails.getMemberId(),pageable);
@@ -46,13 +47,14 @@ public class AddressService {
         List<AddressResponse> addressList  = newPage.stream()
                 .map(a->new AddressResponse(a.getId(),a.getAddress())).toList();
 
-        Map<String,Object> response = new HashMap<>();
 
-        response.put("content",addressList);
-        response.put("totalPage",newPage.getTotalPages());
-        response.put("totalElements",newPage.getTotalElements());
-        response.put("currentPage",newPage.getNumber());
-        return response;
+
+        return    CustomPageResponse.of(
+                addressList,
+                newPage.getTotalPages(),
+                newPage.getTotalElements(),
+                newPage.getNumber()
+        );
     }
 
     public AddressResponse getAddressDetail(CustomUserDetails customUserDetails, Long addressId) {

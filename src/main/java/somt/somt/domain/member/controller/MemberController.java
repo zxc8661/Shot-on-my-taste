@@ -2,6 +2,7 @@ package somt.somt.domain.member.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,18 +25,19 @@ public class MemberController {
 
         memberService.register(registerRequestDTO);
 
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new CustomResponse<>(true,"회원가입 성공","Not data",null)
-        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("회원 가입 성공"));
     }
 
 
     @PostMapping("/member/withdrawal")
     public ResponseEntity<?> withdrawal(@AuthenticationPrincipal CustomUserDetails userDetails){
         memberService.withdrawal(userDetails);
-        return ResponseEntity.ok("회원탈퇴에 성공했습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("회원 탈퇴 성공"));
     }
 
     @GetMapping("/public/member/checkUsername")
@@ -43,11 +45,14 @@ public class MemberController {
         boolean result = memberService.checkUserName(userName);
 
         if(result){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디","userName",userName));
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.fail("이미 존재하는 아이디"));
         }
         else{
-            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"아이디 사용가능","userName",userName));
-
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(CustomResponse.success(result,"아이디 사용가능"));
         }
     }
 
@@ -58,11 +63,13 @@ public class MemberController {
         boolean result = memberService.checkNickname(nickname);
 
         if(result){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomResponse<>(false,"이미 존재하는 아이디","nickname",nickname));
-
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.fail("이미 존재하는 닉네임"));
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(new CustomResponse<>(true,"닉네임 사용가능 ","nickname",nickname));
-
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(CustomResponse.success("닉네입 사용 가능"));
         }
     }
 
@@ -70,7 +77,10 @@ public class MemberController {
     public ResponseEntity<?> memberDetail(
             @AuthenticationPrincipal CustomUserDetails customUserDetails){
         MemberDetail memberDetail = memberService.memberDetail(customUserDetails);
-        return ResponseEntity.ok(new CustomResponse<>(true,"멤버 상세 조회 성공","memberDetail",memberDetail));
+
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .body(CustomResponse.success(memberDetail,"멤버 상세 조회 성공"));
     }
 
     @PutMapping("/user/member/modify/email")
@@ -79,7 +89,9 @@ public class MemberController {
             @RequestParam("email") String email){
 
         memberService.modifyEmail(customUserDetails, email);
-        return ResponseEntity.ok(new CustomResponse<>(true,"이메일 수정 성공","email",email));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("멤버 이메일 수정 성공 "));
     }
 
     @PutMapping("/user/member/modify/nickname")
@@ -88,7 +100,9 @@ public class MemberController {
             @RequestParam("nickname") String nickname){
 
         memberService.modifyNickname(customUserDetails,nickname);
-        return ResponseEntity.ok(new CustomResponse<>(true,"닉네임 수정 성공","nickname",nickname));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("멤버 닉네임 수정 성공"));
     }
 
     @PutMapping("/user/member/modify/password")
@@ -98,7 +112,9 @@ public class MemberController {
             @RequestParam("oldPassword")String oldPassword){
 
         memberService.modifyPassword(customUserDetails,newPassword,oldPassword);
-        return ResponseEntity.ok(new CustomResponse<>(true,"비밀번호 수정 성공","Not data",null ));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("멤버 비밀번호 수정 성공 "));
     }
 
 
