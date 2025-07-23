@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.address.dto.AddressRequest;
@@ -25,7 +26,7 @@ public class AddressController {
     public ResponseEntity<?> getAddressList(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                             @RequestParam(name = "page",defaultValue = "0")Integer page,
                                             @RequestParam(name = "size",defaultValue="10")Integer size){
-        Map<String,Object>response =  addressService.getAddress(customUserDetails, page, size);
+        CustomPageResponse<AddressResponse> response =  addressService.getAddress(customUserDetails, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(CustomResponse.success(response));
     }
 

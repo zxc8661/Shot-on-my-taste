@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.comment.dto.CommentModifyRequest;
@@ -40,7 +41,7 @@ public class CommentController {
     public ResponseEntity<?> getCommentList(@PathVariable(name = "productId") Long productId,
                                             @RequestParam(name = "page",defaultValue = "0") int page,
                                             @RequestParam(name = "size",defaultValue = "10") int size){
-        Map<String,Object> response = commentService.getCommentList(productId,page,size);
+        CustomPageResponse<CommentResponse> response = commentService.getCommentList(productId,page,size);
 
 
         return ResponseEntity

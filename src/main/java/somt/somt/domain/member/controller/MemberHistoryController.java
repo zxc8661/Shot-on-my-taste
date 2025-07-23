@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
+import somt.somt.domain.member.dto.MemberHistory.MemberHistoryDTO;
 import somt.somt.domain.member.entity.history.MemberHistory;
 import somt.somt.domain.member.repository.MemberHistoryRepository;
 import somt.somt.domain.member.service.MemberHistoryService;
@@ -34,7 +36,7 @@ public class MemberHistoryController {
             @RequestParam(name = "page",defaultValue = "0") int page,
             @RequestParam(name ="size" , defaultValue = "30")  int size,
             @RequestParam(name = "memberId", required = false) Long memberId){
-        Map<String,Object> response = memberHistoryService.getHistory(page,size,memberId);
+        CustomPageResponse<MemberHistoryDTO> response = memberHistoryService.getHistory(page,size,memberId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

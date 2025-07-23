@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
@@ -62,7 +63,7 @@ public class ProductController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "30") int size
     ){
-        Map<String,Object> response = productService.getProductSearch(keyword,page,size);
+        CustomPageResponse<ProductDTO> response = productService.getProductSearch(keyword,page,size);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomResponse.success(response,"삼품 검색 성공"));

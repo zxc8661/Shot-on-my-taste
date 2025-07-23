@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
 import somt.somt.domain.cart.entity.Cart;
 import somt.somt.domain.cart.service.CartService;
@@ -62,7 +63,7 @@ public class OrderService {
         return order.getId();
     }
 
-    public Map<String, Object> getOrders(CustomUserDetails customUserDetails, Integer page, Integer size) {
+    public CustomPageResponse<OrderResponse> getOrders(CustomUserDetails customUserDetails, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page,size, Sort.by("createAt").descending());
 
         Page<Order> orderPage = orderRepository.findByMemberId(customUserDetails.getMemberId(),pageable);
@@ -78,7 +79,14 @@ public class OrderService {
         response.put("totalElements",orderPage.getTotalElements());
         response.put("currentPage",orderPage.getNumber());
 
-        return response;
+
+
+        return CustomPageResponse.of(
+                orderResponses,
+                orderPage.getTotalPages(),
+                orderPage.getTotalElements(),
+                orderPage.getNumber()
+        );
     }
 
 

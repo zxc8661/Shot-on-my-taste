@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.exception.CustomException;
 import somt.somt.common.exception.ErrorCode;
 import somt.somt.common.security.dto.CustomUserDetails;
@@ -47,7 +48,7 @@ public class CommentService {
         return comment.getId();
     }
 
-    public Map<String, Object> getCommentList(Long productId, int page, int size) {
+    public CustomPageResponse<CommentResponse> getCommentList(Long productId, int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
 
         Page<Comment> pages = commentRepository.findByProductIdAndParentIdIsNull(productId,pageable);
@@ -66,15 +67,12 @@ public class CommentService {
                 })
                 .toList();
 
-
-        Map<String,Object> response = new HashMap<>();
-        response.put("content",commentResponseList);
-        response.put("totalPageCount",pages.getTotalPages());
-        response.put("totalElementCount",pages.getTotalElements());
-        response.put("currentPage",pages.getNumber());
-
-
-        return response;
+        return CustomPageResponse.of(
+                commentResponseList,
+                pages.getTotalPages(),
+                pages.getTotalElements(),
+                pages.getNumber()
+        );
     }
 
 

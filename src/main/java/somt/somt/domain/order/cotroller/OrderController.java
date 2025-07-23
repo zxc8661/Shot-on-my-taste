@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
 import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.domain.order.dto.OrderResponse;
 import somt.somt.domain.order.service.OrderService;
 import somt.somt.domain.product.service.ProductService;
 
@@ -38,7 +40,7 @@ public class OrderController {
             @RequestParam(name = "page",defaultValue = "0") Integer page,
             @RequestParam(name = "size",defaultValue = "30") Integer size
     ){
-        Map<String,Object> response = orderService.getOrders(customUserDetails,page,size);
+        CustomPageResponse<OrderResponse> response = orderService.getOrders(customUserDetails,page,size);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
