@@ -43,7 +43,7 @@ public class CommentService {
         }else{
             comment = new Comment(member, product, commentRequest.getContent(), commentRequest.getGrade(),commentRequest.getParentId());
         }
-        commentRepository.save(comment);
+        comment = commentRepository.save(comment);
         return comment.getId();
     }
 
