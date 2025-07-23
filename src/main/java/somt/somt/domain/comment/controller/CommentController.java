@@ -3,6 +3,7 @@ package somt.somt.domain.comment.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,8 +30,10 @@ public class CommentController {
                                            @RequestBody @Valid CommentRequest commentRequest) {
         Long id = commentService.create(customUserDetails,commentRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new CustomResponse<>(true, "댓글 생성 성공" , "commentId",id));
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(CustomResponse.success(id,"댓글 생성 성공"));
     }
 
     @GetMapping("/public/comments/{productId}")
@@ -39,24 +42,23 @@ public class CommentController {
                                             @RequestParam(name = "size",defaultValue = "10") int size){
         Map<String,Object> response = commentService.getCommentList(productId,page,size);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"댓글 조회 성공","commentData",response));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success(response,"댓글 조회 성공"));
     }
 
-//    @GetMapping("/user/comments/{commentId}/replies")
-//    public ResponseEntity<?> getSonCommentList(@PathVariable(name = "commentId") Long commentId){
-//        List<CommentResponse> response = commentService.getSonCommentList(commentId);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
 
 
     @PutMapping("/user/comments/{commentId}")
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentModifyRequest commentModifyRequest,
                                            @PathVariable(name = "commentId") Long commentId) {
-        Long commentId2 =commentService.modify(customUserDetails,commentModifyRequest,commentId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"댓글 수정 성공","commentId",commentId2));
+        Long response =commentService.modify(customUserDetails,commentModifyRequest,commentId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success(response,"댓글 수정 성공"));
     }
 
 
@@ -64,6 +66,9 @@ public class CommentController {
     public ResponseEntity<?> deleteComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new CustomResponse<>(true,"댓글 삭제 성공","Not data",null));    }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomResponse.success("댓글 삭제 성공"));
+    }
 }

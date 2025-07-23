@@ -54,6 +54,7 @@ public class MemberService {
        }catch (DataIntegrityViolationException e){
            throw new CustomException(ErrorCode.BAD_REGISTER_REQUEST);
        }
+
     }
 
 
