@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: Cart API
+  version: 1.0.0
+paths:
+  /api/user/cart:
+    post:
+      summary: 장바구니에 상품 추가
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartRequest"
+      responses:
+        "201":
+          description: 생성됨
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "NOT_FOUND_PRODUCT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: 장바구니 목록 조회
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartResponse"
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/user/cart/{cartId}:
+    put:
+      summary: 장바구니 상품 수량 수정
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: amount
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 성공
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: "ACCESS_DENIED, CART_ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "NOT_FOUND_CART"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: 장바구니 상품 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 성공
+        "401":
+          description: "ACCESS_DENIED, CART_ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "NOT_FOUND_CART"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/user/cart/deleteAll:
+    delete:
+      summary: 장바구니 전체 삭제
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: 성공
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        statusCode:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+    CartRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+        amount:
+          type: integer
+    CartResponse:
+      type: object
+      properties:
+        cartId:
+          type: integer
+        amount:
+          type: integer
+        productDTO:
+          $ref: "#/components/schemas/ProductDTO"
+        createAt:
+          type: string
+          format: date-time
+    ProductDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        productName:
+          type: string
+        price:
+          type: number
+        imagePath:
+          type: string
+        genreNames:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

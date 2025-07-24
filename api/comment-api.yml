@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: Comment API
+  version: 1.0.0
+paths:
+  /api/user/comments:
+    post:
+      summary: 댓글 생성
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentRequest"
+      responses:
+        "201":
+          description: 생성됨
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/public/comments/{productId}:
+    get:
+      summary: 댓글 목록 조회
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentResponsePage"
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/user/comments/{commentId}:
+    put:
+      summary: 댓글 수정
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentModifyRequest"
+      responses:
+        "200":
+          description: 성공
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "NOT_FOUND_COMMENT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: 댓글 삭제
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 성공
+        "401":
+          description: "ACCESS_DENIED"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "NOT_FOUND_COMMENT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        statusCode:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+    CommentRequest:
+      type: object
+      properties:
+        productId:
+          type: integer
+        content:
+          type: string
+        grade:
+          type: integer
+        parentId:
+          type: integer
+    CommentModifyRequest:
+      type: object
+      properties:
+        content:
+          type: string
+        grade:
+          type: integer
+    CommentResponse:
+      type: object
+      properties:
+        commentId:
+          type: integer
+        memberId:
+          type: integer
+        nickname:
+          type: string
+        content:
+          type: string
+        grade:
+          type: integer
+        modifyAt:
+          type: string
+          format: date-time
+        reply:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommentResponse"
+    CommentResponsePage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommentResponse"
+        pageable:
+          type: object
+        last:
+          type: boolean
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
+        sort:
+          type: object
+        first:
+          type: boolean
+        numberOfElements:
+          type: integer
+        empty:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
