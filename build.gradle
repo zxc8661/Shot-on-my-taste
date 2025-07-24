@@ -61,6 +61,10 @@ dependencies {
 
 	// Jackson
 	implementation("com.fasterxml.jackson.core:jackson-databind")
+
+	//MyBatis
+	implementation 'org.mybatis:mybatis:3.5.15'
+
 }
 
 tasks.named('test') {
