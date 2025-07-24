@@ -58,7 +58,7 @@ public class ProductController {
     }
 
     @GetMapping("/public/products/search")
-    public ResponseEntity<?> gerProductSearch(
+    public ResponseEntity<?> getProductSearch(
             @RequestParam(name = "keyword",defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "30") int size
