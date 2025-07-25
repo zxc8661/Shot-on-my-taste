@@ -18,18 +18,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     Page<Product> findByProductNameContainingIgnoreCaseOrContentContainingIgnoreCase(String keyword1,String keyword2,Pageable pageable );
 
-    @Query(value = """
-            select p
-            from Product p
-            left join fetch p.genreProductList gp
-            left join fetch gp.genre
-            left join fetch p.productThumbnails
-            where lower(p.productName) like lower(concat('%', :kw, '%'))
-            or  lower(p.content) like lower(concat('%', :kw,'%'))
-            """,
-            countQuery = """ 
-                                                                                              
-            select count(p)                                                                                   
+    @Query("""
+                                                                                             
+            select p                                                                                 
             from Product p                                                                                    
             where lower(p.productName) like lower(concat('%', :kw, '%'))                                      
             or  lower(p.content) like lower(concat('%', :kw,'%'))                                             
