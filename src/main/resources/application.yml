@@ -7,12 +7,17 @@ spring :
 
   jpa:
     hibernate:
-      ddl-auto : update
+      ddl-auto : none
+      default_batch_fetch_size : 100
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
     show-sql: true
+
+  sql:
+    init:
+      mode: always
 
   thymeleaf:
     prefix: classpath:/templates/

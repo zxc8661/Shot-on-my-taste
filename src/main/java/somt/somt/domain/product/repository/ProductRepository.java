@@ -19,10 +19,14 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByProductNameContainingIgnoreCaseOrContentContainingIgnoreCase(String keyword1,String keyword2,Pageable pageable );
 
     @Query("""
-            select p
-            from Product p
-            where lower(p.productName) like lower(concat('%', :kw, '%'))
-            or  lower(p.content) like lower(concat('%', :kw,'%'))
-            """)
+                                                                                             
+            select p                                                                                 
+            from Product p                                                                                    
+            where lower(p.productName) like lower(concat('%', :kw, '%'))                                      
+            or  lower(p.content) like lower(concat('%', :kw,'%'))                                             
+                """
+    )
     Page<Product> searchByKeyword(@Param("kw") String keyword, Pageable pageable);
+
+
 }

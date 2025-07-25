@@ -100,6 +100,7 @@
 //        when(addressRepository.findAllByMemberId(anyLong(),any(Pageable.class))).thenReturn(mockPage);
 //        //when
 //        Map<String,Object> mockResult = addressService.getAddress(mockCustomUserDetails,page,size);
+//        Map<String,Object> mockResult = addressService.getAddress(mockCustomUserDetails,page,size);
 //
 //        //then
 //        /*

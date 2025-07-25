@@ -29,18 +29,7 @@ public class CartResponse {
 
         this.cartId=cart.getId();
         this.amount = cart.getAmount();
-        this.productDTO = new ProductDTO(
-                product.getId(),
-                product.getProductName(),
-                product.getPrice(),
-                product.getProductThumbnails().stream()
-                        .map(ProductThumbnail::getImagePath)
-                        .findFirst()
-                                .orElse(null),
-                product.getGenreProductList().stream()
-                        .map(gp->gp.getGenre().getName())
-                        .collect(Collectors.toList())
-        );
+        this.productDTO = new ProductDTO(product);
         this.createAt = cart.getCreateAt();
     }
 
