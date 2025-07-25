@@ -51,20 +51,7 @@ public class ProductService {
         }
 
         List<ProductDTO> productDTOS = productPage.stream()
-                .map(p->{
-                    List<String> genres = p.getGenreProductList().stream()
-                            .map(gp->gp.getGenre().getName())
-                            .collect(Collectors.toList());
-                    String thumbnailUrl = p.getProductThumbnails().isEmpty()
-                            ? null
-                            : p.getProductThumbnails().get(0).getImagePath();
-
-                    return new ProductDTO(p.getId()
-                            ,p.getProductName()
-                            ,p.getPrice()
-                            ,thumbnailUrl
-                            ,genres);
-                })
+                .map(ProductDTO ::new)
                 .collect(Collectors.toList());
 
 

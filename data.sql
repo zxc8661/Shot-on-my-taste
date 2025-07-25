@@ -150,7 +150,9 @@ BEGIN
     WHILE i <= 5000 DO
         SET random_price = 10000 + FLOOR(RAND() * 90000); -- 10000 to 99999
         SET random_stock = FLOOR(RAND() * 100) + 1; -- 1 to 100
-        SET random_days_ago = FLOOR(RAND() * 365); -- 0 to 364 days ago
+        -- Calculate days ago based on product ID to ensure creation dates are somewhat ordered by ID
+        -- Max days ago (e.g., 365 days) for the first product, decreasing to 0 for the last product
+        SET random_days_ago = FLOOR(365 * (1 - (i - 1) / 5000.0));
         SET create_at_val = DATE_SUB(NOW(), INTERVAL random_days_ago DAY);
 
         INSERT INTO product (product_name, price, stock, content, create_at, modify_at)

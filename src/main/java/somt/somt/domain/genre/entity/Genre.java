@@ -24,8 +24,7 @@ public class Genre {
     @Column(nullable = false,unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "genre",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<GenreProduct> genreProductList = new ArrayList<>();
+    
 
 
     @Column(name = "create_at",nullable = false)

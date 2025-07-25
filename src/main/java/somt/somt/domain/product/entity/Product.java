@@ -14,7 +14,9 @@ import somt.somt.domain.productThumbnail.entity.ProductThumbnail;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,13 +38,13 @@ public class Product {
     private Integer stock;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
-    private List<ProductThumbnail> productThumbnails = new ArrayList<>();
+    private Set<ProductThumbnail> productThumbnails = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "product",orphanRemoval = true)
-    private List<Comment> commentList =new ArrayList<>();
+    private Set<Comment> commentList =new HashSet<>();
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<GenreProduct> genreProductList= new ArrayList<>();
+    private Set<GenreProduct> genreProductList= new HashSet<>();
 
     @Column(name = "content" ,nullable = false)
     private String content;
@@ -80,7 +82,6 @@ public class Product {
     public void addGenreProduct(Genre genre){
         GenreProduct genreProduct = new GenreProduct(genre,this);
         this.genreProductList.add(genreProduct);
-        genre.getGenreProductList().add(genreProduct);
     }
 
     public Product(Long id,String productName,BigDecimal price,int stock,String content){
