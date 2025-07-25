@@ -29,7 +29,7 @@ public class ProductRepositorySearchByKeywordTest {
 
         Long startTime = System.nanoTime();
 
-        for(int i=0;i<100;i++){
+        for(int i=0;i<1000;i++){
 
             productService.getProductSearch("",0,10);
 
@@ -40,7 +40,7 @@ public class ProductRepositorySearchByKeywordTest {
         long duration = endTime - startTime;
         double averageDurationMillis = TimeUnit.NANOSECONDS.toMillis(duration) / (double) 100;
 
-        System.out.println("수정 전 searchByKeyword 평균 실행 시간: " + averageDurationMillis + " ms");
+        System.out.println("수정 전 productService.getProductSearch 평균 실행 시간: " + averageDurationMillis + " ms");
         assertThat(averageDurationMillis).isPositive();
     }
 
