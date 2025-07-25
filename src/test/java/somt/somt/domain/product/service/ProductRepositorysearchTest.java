@@ -24,6 +24,9 @@ public class ProductRepositorysearchTest {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ProductService productService;
+
 
     @Test
     void test(){
@@ -31,15 +34,9 @@ public class ProductRepositorysearchTest {
 
         Long startTime = System.nanoTime();
 
-        for(int i=0;i<100;i++){
-            Page<Product> products = productRepository.searchByKeyword("",pageable);
+        for(int i=0;i<1000;i++){
 
-            products.getContent().forEach(product -> {
-                                 product.getProductName();
-                                 product.getContent();
-                                 product.getGenreProductList().size(); // fetch join된 컬렉션 접근
-                                 product.getProductThumbnails().size(); // fetch join된 컬렉션 접근
-                             });
+            productService.getProductSearch("",0,10);
 
         }
 
@@ -47,7 +44,7 @@ public class ProductRepositorysearchTest {
                  long duration = endTime - startTime;
                  double averageDurationMillis = TimeUnit.NANOSECONDS.toMillis(duration) / (double) 100;
 
-                 System.out.println("수정 후 searchByKeyword 평균 실행 시간: " + averageDurationMillis + " ms");
+                 System.out.println("수정 후 productService.getProductSearch 평균 실행 시간: " + averageDurationMillis + " ms");
         assertThat(averageDurationMillis).isPositive();
     }
 
