@@ -41,10 +41,10 @@ public class ProductRepositorysearchTest {
         }
 
         long endTime = System.nanoTime();
-                 long duration = endTime - startTime;
-                 double averageDurationMillis = TimeUnit.NANOSECONDS.toMillis(duration) / (double) 100;
+        long duration = endTime - startTime;
+        double averageDurationMillis = TimeUnit.NANOSECONDS.toMillis(duration) / (double) 1000;
 
-                 System.out.println("수정 후 productService.getProductSearch 평균 실행 시간: " + averageDurationMillis + " ms");
+        System.out.println("수정 후 productService.getProductSearch 평균 실행 시간: " + averageDurationMillis + " ms");
         assertThat(averageDurationMillis).isPositive();
     }
 
