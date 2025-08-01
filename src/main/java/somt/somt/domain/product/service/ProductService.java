@@ -40,7 +40,7 @@ public class ProductService {
 
 
     public CustomPageResponse<ProductDTO> getProductSearch(String keyword, int page, int size) {
-        Pageable pageable = PageRequest.of(page,size,Sort.by("createAt").descending());
+        Pageable pageable = PageRequest.of(page,size,Sort.by("create_at").descending());
 
         Page<Product> productPage ;
 

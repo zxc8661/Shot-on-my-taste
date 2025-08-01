@@ -57,13 +57,16 @@ dependencies {
 
 	// Thymeleaf
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-
-
+	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
 	// Jackson
 	implementation("com.fasterxml.jackson.core:jackson-databind")
 
 	//MyBatis
 	implementation 'org.mybatis:mybatis:3.5.15'
+
+	//devtools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
 
 }
 

@@ -24,6 +24,7 @@ spring :
     suffix: .html
     encoding: UTF-8
     cache: false
+
   web:
     resources:
       cache:
