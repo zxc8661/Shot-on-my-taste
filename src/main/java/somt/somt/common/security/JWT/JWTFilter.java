@@ -42,7 +42,8 @@ public class JWTFilter extends OncePerRequestFilter {
             "/api/member/login",
             "/api/member/register",
             "/api/member/logout",
-            "/api/public/**"
+            "/api/public/**",
+            "/v3/api-docs"
     );
 
 
