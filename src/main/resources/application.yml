@@ -29,4 +29,10 @@ spring :
       cache:
         period: 3600
 
-
+springdoc :
+  api-docs :
+    enabled : true
+  swagger-ui :
+    enabled : true
+    path : /swagger-ui.html
+  override-with-generic-response : false

@@ -72,15 +72,6 @@ public class OrderService {
                 .map(OrderResponse::new)
                 .toList();
 
-        Map<String,Object> response =  new HashMap<>();
-
-        response.put("content",orderResponses);
-        response.put("totalPages",orderPage.getTotalPages());
-        response.put("totalElements",orderPage.getTotalElements());
-        response.put("currentPage",orderPage.getNumber());
-
-
-
         return CustomPageResponse.of(
                 orderResponses,
                 orderPage.getTotalPages(),
@@ -90,7 +81,7 @@ public class OrderService {
     }
 
 
-    public Map<String, Object> getAllOrders(Integer page, Integer size) {
+    public CustomPageResponse<OrderResponse> getAllOrders(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page,size, Sort.by("createAt").descending());
 
         Page<Order> orderPage = orderRepository.findAll(pageable);
@@ -99,13 +90,12 @@ public class OrderService {
                 .map(OrderResponse::new)
                 .toList();
 
-        Map<String,Object> response =  new HashMap<>();
 
-        response.put("content",orderResponses);
-        response.put("totalPages",orderPage.getTotalPages());
-        response.put("totalElements",orderPage.getTotalElements());
-        response.put("currentPage",orderPage.getNumber());
-
-        return response;
+        return CustomPageResponse.of(
+                orderResponses,
+                orderPage.getTotalPages(),
+                orderPage.getTotalElements(),
+                orderPage.getNumber()
+        );
     }
 }

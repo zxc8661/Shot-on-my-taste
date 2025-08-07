@@ -1,28 +1,37 @@
 package somt.somt.domain.product.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import somt.somt.common.CustomResponse.CustomPageResponse;
 import somt.somt.common.CustomResponse.CustomResponse;
-import somt.somt.common.security.dto.CustomUserDetails;
+import somt.somt.common.exception.ErrorResponse;
+
+import somt.somt.common.swagger.product.ProductDetailResponse;
+import somt.somt.common.swagger.product.ProductIdResponse;
+import somt.somt.common.swagger.product.ProductSearchListResponse;
 import somt.somt.domain.product.dto.reponse.ProductDTO;
-import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.dto.reponse.ProductDetailDTO;
+import somt.somt.domain.product.dto.request.ProductRequest;
 import somt.somt.domain.product.service.ProductService;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
+
+
+@Tag(name ="Product API",description = "상품 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -30,9 +39,13 @@ public class ProductController {
 
     private final ProductService productService;
 
-
+    @Operation(summary = "상품 등록", security=@SecurityRequirement(name= "bearerAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "상품 추가 성공", content = @Content(schema = @Schema(implementation = ProductDetailResponse.class))),
+            @ApiResponse(responseCode = "400",description = "잘못된 요청 값" , content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/admin/products")
-    public ResponseEntity<?> create(
+    public ResponseEntity<CustomResponse<ProductDetailDTO>> create(
             @ModelAttribute @Valid ProductRequest dto,
             @RequestParam(value = "imageFiles") List<MultipartFile> files
     ) throws IOException {
@@ -46,9 +59,14 @@ public class ProductController {
 
 
 
+    @Operation(summary = "상품 상세 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "상품 상세 정보 조회 성공",content = @Content(schema = @Schema(implementation = ProductDetailResponse.class))),
+            @ApiResponse(responseCode ="404",description = "해당 ID의 상품을 찾을 수 없습니다", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
 
+    })
     @GetMapping("/public/products/{productId}")
-    public ResponseEntity<?> getProductDetails(
+    public ResponseEntity<CustomResponse<ProductDetailDTO>> getProductDetails(
             @PathVariable(name = "productId") Long productId){
         ProductDetailDTO productDetailDTO = productService.getProductDetails(productId);
 
@@ -57,8 +75,13 @@ public class ProductController {
                 .body(CustomResponse.success(productDetailDTO,"상품 상세 조회 성공 "));
     }
 
+    @Operation(summary = "상품 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode= "200",description = "상품 검색 성공",content = @Content(schema = @Schema(implementation = ProductSearchListResponse.class)))
+    })
+
     @GetMapping("/public/products/search")
-    public ResponseEntity<?> getProductSearch(
+    public ResponseEntity<CustomResponse<CustomPageResponse<ProductDTO>>> getProductSearch(
             @RequestParam(name = "keyword",defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "30") int size
@@ -72,6 +95,8 @@ public class ProductController {
 
 
 
+    @Operation(summary = "상품 수정",security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode="200", description = "상품 수정 성공", content = @Content(schema = @Schema(implementation = ProductIdResponse.class)))
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<?> modify(
             @ModelAttribute @Valid ProductRequest productRequest,
@@ -85,6 +110,9 @@ public class ProductController {
                 .body(CustomResponse.success(productId,"상품 수정 성공"));
     }
 
+
+    @Operation(summary = "상품 삭제" , security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "상품 삭제 성공", content = @Content(schema = @Schema(implementation = ProductIdResponse.class)))
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<?> delete(@PathVariable(name = "productId") Long id){
         productService.delete(id);
@@ -94,3 +122,11 @@ public class ProductController {
     }
 
 }
+
+
+
+
+
+
+
+

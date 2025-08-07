@@ -1,6 +1,12 @@
 package somt.somt.domain.comment.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
@@ -22,11 +28,14 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "Comment API", description = "댓글 API")
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping("/user/comments")
+    @Operation(summary = "댓글 생성",security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "201", description = "상품 생성 성공", content = @Content(schema = @Schema(implementation = CommentIdResponse.class)))
     public ResponseEntity<?> createComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentRequest commentRequest) {
         Long id = commentService.create(customUserDetails,commentRequest);
@@ -38,6 +47,8 @@ public class CommentController {
     }
 
     @GetMapping("/public/comments/{productId}")
+    @Operation(summary = "댓글 목록 조회")
+    @ApiResponse(responseCode = "200",description = "댓글 조회 성공",content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     public ResponseEntity<?> getCommentList(@PathVariable(name = "productId") Long productId,
                                             @RequestParam(name = "page",defaultValue = "0") int page,
                                             @RequestParam(name = "size",defaultValue = "10") int size){
@@ -52,6 +63,8 @@ public class CommentController {
 
 
     @PutMapping("/user/comments/{commentId}")
+    @Operation(summary = "댓글 수정", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200",description = "댓글 수정 성공", content = @Content(schema = @Schema(implementation = CommentIdResponse.class)))
     public ResponseEntity<?> modifyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid CommentModifyRequest commentModifyRequest,
                                            @PathVariable(name = "commentId") Long commentId) {
@@ -64,6 +77,8 @@ public class CommentController {
 
 
     @DeleteMapping("/user/comments/{commentId}")
+    @Operation(summary = "댓글 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200",description = "댓글 삭제 성공",content = @Content(schema = @Schema(implementation = CommentStringResponse.class)))
     public ResponseEntity<?> deleteComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);
@@ -73,3 +88,13 @@ public class CommentController {
                 .body(CustomResponse.success("댓글 삭제 성공"));
     }
 }
+
+@Schema(description = "댓글 응답 Id")
+class CommentIdResponse extends CustomResponse<Long>{};
+
+@Schema(description = "댓글 응답 String")
+class CommentStringResponse extends CustomResponse<String>{};
+
+@Schema(description = "댓글 목록 응답")
+class CommentListResponse extends CustomResponse<CustomPageResponse<CommentResponse>>{};
+
