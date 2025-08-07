@@ -77,8 +77,8 @@ public class CommentController {
 
 
     @DeleteMapping("/user/comments/{commentId}")
-    @Operation(summary = "댓글 수정", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "200",description = "댓글 수정 성공",content = @Content(schema = @Schema(implementation = CommentStringResponse.class)))
+    @Operation(summary = "댓글 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200",description = "댓글 삭제 성공",content = @Content(schema = @Schema(implementation = CommentStringResponse.class)))
     public ResponseEntity<?> deleteComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "commentId") Long commentId){
         commentService.delete(customUserDetails,commentId);

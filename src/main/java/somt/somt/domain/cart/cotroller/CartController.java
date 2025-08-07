@@ -45,15 +45,15 @@ public class CartController {
 
     @GetMapping("/user/cart")
     @Operation(summary = "장바구니 조회", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "200",description = "장바구니 조회 성공",content = @Content(schema = @Schema(implementation = CartListResponse.class)))
+    @ApiResponse(responseCode = "200", description = "장바구니 조회 성공", content = @Content(schema = @Schema(implementation = CartListResponse.class)))
     public ResponseEntity<?> getCart(
             @AuthenticationPrincipal CustomUserDetails userDetails
-            )
+    )
     {
         List<CartResponse> cartList = cartService.getCartResponse(userDetails);
 
         return ResponseEntity
-                .status(HttpStatus.FOUND)
+                .status(HttpStatus.OK)
                 .body(CustomResponse.success(cartList,"장바구니 목록 조회 성공"));
     }
 
@@ -108,7 +108,4 @@ class CartStringResponse extends CustomResponse<String>{};
 
 
 @Schema(description = "장바구니 목록")
-class CartList extends CustomPageResponse<CartResponse>{};
-
-@Schema(description = "장바구니 목록 응답")
-class CartListResponse extends CustomResponse<CartList>{};
+class CartListResponse extends CustomResponse<List<CartResponse>>{}

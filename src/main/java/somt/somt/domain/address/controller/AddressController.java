@@ -59,7 +59,7 @@ public class AddressController {
 
     @PostMapping("/user/address")
     @Operation(summary = "주소 생성", security = @SecurityRequirement(name ="bearerAuth"))
-    @ApiResponse(responseCode = "200", description = "주소 생성 성공 ", content = @Content(schema = @Schema(implementation = AddressStringResponse.class)))
+    @ApiResponse(responseCode = "201", description = "주소 생성 성공 ", content = @Content(schema = @Schema(implementation = AddressStringResponse.class)))
     public ResponseEntity<?> createAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid AddressRequest addressRequest){
         addressService.create(customUserDetails,addressRequest);
@@ -83,21 +83,21 @@ public class AddressController {
     public ResponseEntity<?> deleteAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "addressId")Long addressId){
         addressService.delete(customUserDetails,addressId);
-        return ResponseEntity.status(HttpStatus.OK).body("address delete success");
+        return ResponseEntity.status(HttpStatus.OK).body(CustomResponse.success("address delete success"));
     }
 }
 
 
-@Schema(description = "상품 페이지 ")
+@Schema(description = "주소 페이지 ")
 class AddressPage extends CustomPageResponse<AddressResponse>{};
 
-@Schema(description = "상품 페이지 응답")
+@Schema(description = "주소 페이지 응답")
 class AddressPageResponse extends CustomResponse<AddressPage>{};
 
 
-@Schema(description = "상품 상세 조회")
+@Schema(description = "주소 상세 조회")
 class AddressDetailsResponse extends CustomResponse<AddressResponse>{};
 
 
-@Schema(description = "상품 응답 (문자열)")
+@Schema(description = "주소 응답 (문자열)")
 class AddressStringResponse extends CustomResponse<String>{};

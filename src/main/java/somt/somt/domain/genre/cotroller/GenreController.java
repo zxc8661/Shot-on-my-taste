@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Tag(name = "genre API",description = "장르 API")
+@Tag(name = "Genre API",description = "장르 API")
 public class GenreController {
 
     private final GenreService genreService;
@@ -76,7 +76,7 @@ public class GenreController {
 
     @DeleteMapping("/admin/genres/{genreId}")
     @Operation(summary = "장르 삭제", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponse(responseCode = "200",description = "장르 삭제 성공", content = @Content(schema = @Schema(implementation = GenreIdResponse.class)))
+    @ApiResponse(responseCode = "200",description = "장르 삭제 성공", content = @Content(schema = @Schema(implementation = GenreStringResponse.class)))
     public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @PathVariable(name = "genreId") Long genreId){
 

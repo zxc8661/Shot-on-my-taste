@@ -23,7 +23,7 @@ import somt.somt.domain.member.service.MemberService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Tag(name = "memberAPI", description = "멤버 API")
+@Tag(name = "Member API", description = "멤버 API")
 public class MemberController {
 
     private final MemberService memberService;
