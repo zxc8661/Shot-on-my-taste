@@ -1,6 +1,8 @@
 package somt.somt.domain.cart.cotroller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "카트 API")
 public class CartController {
 
     private final CartService cartService;
 
     @PostMapping("/user/cart")
+    @Operation()
     public ResponseEntity<?> createCart(@AuthenticationPrincipal CustomUserDetails userDetails,
                                         @RequestBody @Valid CartRequest cartRequest){
 

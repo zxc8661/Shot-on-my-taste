@@ -59,7 +59,7 @@ public class AddressController {
 
     @PostMapping("/user/address")
     @Operation(summary = "주소 생성", security = @SecurityRequirement(name ="bearerAuth"))
-    @ApiResponse(responseCode = "200", description = "주소 생성 성공 ", content = @Content(schema = @Schema(implementation = AddressCreateAndModifyResponse.class)))
+    @ApiResponse(responseCode = "200", description = "주소 생성 성공 ", content = @Content(schema = @Schema(implementation = AddressStringResponse.class)))
     public ResponseEntity<?> createAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid AddressRequest addressRequest){
         addressService.create(customUserDetails,addressRequest);
@@ -68,7 +68,7 @@ public class AddressController {
 
     @PutMapping("/user/address/{addressId}")
     @Operation(summary = "주소 수정" , security = @SecurityRequirement(name="bearerAuth"))
-    @ApiResponse(responseCode = "200",description = "주소 수정 성공", content = @Content(schema = @Schema(implementation = AddressCreateAndModifyResponse.class)))
+    @ApiResponse(responseCode = "200",description = "주소 수정 성공", content = @Content(schema = @Schema(implementation = AddressStringResponse.class)))
     public ResponseEntity<?> modifyAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody AddressRequest addressRequest,
                                            @PathVariable(name = "addressId") Long addressId){
@@ -78,6 +78,8 @@ public class AddressController {
 
 
     @DeleteMapping("/user/address/{addressId}")
+    @Operation(summary = "주소 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200",description = "주소 삭제 성공", content = @Content(schema = @Schema(implementation = AddressStringResponse.class)))
     public ResponseEntity<?> deleteAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @PathVariable(name = "addressId")Long addressId){
         addressService.delete(customUserDetails,addressId);
@@ -97,5 +99,5 @@ class AddressPageResponse extends CustomResponse<AddressPage>{};
 class AddressDetailsResponse extends CustomResponse<AddressResponse>{};
 
 
-@Schema(description = "상품 생성")
-class AddressCreateAndModifyResponse extends CustomResponse<String>{};
+@Schema(description = "상품 응답 (문자열)")
+class AddressStringResponse extends CustomResponse<String>{};
